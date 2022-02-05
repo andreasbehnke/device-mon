@@ -1,0 +1,43 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_device_mon
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_device_mon:/data/postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks:
+      - postgres_device_mon
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_device_mon
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin_device_mon:/root/.pgadmin
+
+    ports:
+      - "127.0.0.1:${PGADMIN_PORT:-8090}:80"
+    networks:
+      - postgres_device_mon
+    restart: unless-stopped
+
+networks:
+  postgres_device_mon:
+    driver: bridge
+
+volumes:
+  postgres_device_mon:
+    name: "postgres_device_mon"
+  pgadmin_device_mon:
+    name: "pgadmin_auth_jwt"
