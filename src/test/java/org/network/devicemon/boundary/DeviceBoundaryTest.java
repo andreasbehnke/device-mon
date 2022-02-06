@@ -23,7 +23,7 @@ public class DeviceBoundaryTest {
         information.setInet4Address("1.1.1.1");
         information.setMacAddress("B8:27:EB:33:EF:7x");
         ConstraintViolationException violationException = assertThrows(ConstraintViolationException.class, () -> deviceBoundary.signOn(information));
-        assertEquals("signOn.signOnInformation.maxAddress: must be a valid MAC address", violationException.getMessage());
+        assertEquals("signOn.signOnInformation.macAddress: must be a valid MAC address", violationException.getMessage());
     }
 
     @Test
