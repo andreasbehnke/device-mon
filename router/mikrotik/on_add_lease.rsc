@@ -6,11 +6,12 @@
 :local NoUpdate false;
 
 :local deviceServiceUrl;
+:local currentUrl;
 :local payload;
 :local result;
 
 # Configure device service
-:set deviceServiceUrl "http://[CONFIGURE SERVICE IP]:8080/device/sign-on";
+:set deviceServiceUrl "http://[CONFIGURE SERVICE IP]:8080";
 
 # Configure your domain
 :set topdomain "[CONFIGURE YOUR LOCAL TLD]";
@@ -32,9 +33,11 @@
 /ip dns static;
 
 :if ($leaseBound = 1) do={
+  # notify device monitor about sign-on and try to retrieve hostname
   :set payload ("{\"dhcpServerName\":\"".$leaseServerName."\",\"macAddress\":\"".$leaseActMAC."\",\"inet4Address\":\"".$leaseActIP."\",\"clientHostname\":\"".$"lease-hostname"."\"}");
+  :set currentUrl ($deviceServiceUrl."/device/sign-on");
   :do {
-   :set result ([/tool fetch http-method=put http-header-field="Content-Type: application/json" url=$deviceServiceUrl http-data=$payload as-value output=user]);
+   :set result ([/tool fetch http-method=put http-header-field="Content-Type: application/json" url=$currentUrl http-data=$payload as-value output=user]);
    :log info ("received host name from device monitoring:". $result->"data");
    :set FullHostName ($result->"data" . "." . $topdomain);
   } on-error={
@@ -65,6 +68,14 @@
     :if (([get $n name] = $"FullHostName") and ([get $n address] = $leaseActIP)) do={
       remove $n;
     }
+  }
+  # notify device monitor about sign-off
+  :do {
+    :set currentUrl ($deviceServiceUrl."/device/sign-off/".$leaseActMAC);
+    /tool fetch http-method=put url=$currentUrl output=user;
+    :log info ("send sign-off to device monitor");
+  } on-error={
+    :log error ("device monitor not reachable");
   }
 }
 

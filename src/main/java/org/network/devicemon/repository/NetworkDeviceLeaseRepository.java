@@ -11,4 +11,5 @@ public interface NetworkDeviceLeaseRepository extends JpaRepository<NetworkDevic
 
     List<NetworkDeviceLease> findAllByNetworkDeviceAndLeaseEndIsNull(NetworkDevice device);
 
+    List<NetworkDeviceLease> findAllByNetworkDeviceMacAddressAndLeaseEndIsNull(String macAddress);
 }
