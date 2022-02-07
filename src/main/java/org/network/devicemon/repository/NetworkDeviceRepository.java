@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface NetworkDeviceRepository extends JpaRepository<NetworkDevice, UUID> {
 
-    NetworkDevice findFirstByMacAddress(String macAddress);
+    NetworkDevice findByMacAddress(String macAddress);
 }

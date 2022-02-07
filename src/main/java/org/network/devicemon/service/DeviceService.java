@@ -17,12 +17,15 @@ public class DeviceService {
 
     private final NetworkDeviceRepository deviceRepository;
 
-    public DeviceService(NetworkDeviceRepository deviceRepository) {
+    private final LeaseService leaseService;
+
+    public DeviceService(NetworkDeviceRepository deviceRepository, LeaseService leaseService) {
         this.deviceRepository = deviceRepository;
+        this.leaseService = leaseService;
     }
 
     public String signOn(@Valid SignOnInformation signOnInformation) {
-        NetworkDevice networkDevice = deviceRepository.findFirstByMacAddress(signOnInformation.getMacAddress());
+        NetworkDevice networkDevice = deviceRepository.findByMacAddress(signOnInformation.getMacAddress());
         if (networkDevice == null) {
             // string temporally hostname
             String hostname = hasText(signOnInformation.getClientHostname()) ? signOnInformation.getClientHostname() : toValidDnsHostName(signOnInformation.getMacAddress());
@@ -34,6 +37,7 @@ public class DeviceService {
             networkDevice.setApproved(false);
             networkDevice = deviceRepository.save(networkDevice);
         }
+        leaseService.startLease(networkDevice, signOnInformation);
         return networkDevice.getHostname();
     }
 
