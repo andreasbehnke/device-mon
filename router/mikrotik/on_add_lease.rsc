@@ -13,7 +13,7 @@
 :set deviceServiceUrl "http://[CONFIGURE SERVICE IP]:8080/device/sign-on";
 
 # Configure your domain
-:set topdomain "behnke.net";
+:set topdomain "[CONFIGURE YOUR LOCAL TLD]";
 
 :if ($"lease-hostname" = "") do={
   :for i from=0 to=([:len $"leaseActMAC"] - 1) do={ 
