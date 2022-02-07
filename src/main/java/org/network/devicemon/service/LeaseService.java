@@ -4,11 +4,9 @@ import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.entity.NetworkDeviceLease;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.repository.NetworkDeviceLeaseRepository;
-import org.network.devicemon.validation.MacAddress;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class LeaseService {
         this.leaseRepository = leaseRepository;
     }
 
-    public void startLease(@NotNull NetworkDevice device,@NotNull SignOnInformation signOnInformation) {
+    public void startLease(NetworkDevice device, SignOnInformation signOnInformation) {
         ZonedDateTime now = ZonedDateTime.now();
         // Check if there are open-ended leases for this device. Stop these, because one device can only have one lease at any one time.
         List<NetworkDeviceLease> openLeases = leaseRepository.findAllByNetworkDeviceAndLeaseEndIsNull(device);
@@ -38,7 +36,7 @@ public class LeaseService {
         leaseRepository.save(startedLease);
     }
 
-    public void endLease(@NotNull String macAddress) {
+    public void endLease(String macAddress) {
         ZonedDateTime now = ZonedDateTime.now();
         // Check if there are open-ended leases for this device. Stop these, because one device can only have one lease at any one time.
         List<NetworkDeviceLease> openLeases = leaseRepository.findAllByNetworkDeviceMacAddressAndLeaseEndIsNull(macAddress);

@@ -4,15 +4,11 @@ import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.repository.NetworkDeviceRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 
 import static org.network.devicemon.service.MacAddressUtil.toValidDnsHostName;
 import static org.springframework.util.StringUtils.hasText;
 
 @Service
-@Validated
 public class DeviceService {
 
     private final NetworkDeviceRepository deviceRepository;
@@ -24,7 +20,7 @@ public class DeviceService {
         this.leaseService = leaseService;
     }
 
-    public String signOn(@Valid SignOnInformation signOnInformation) {
+    public String signOn(SignOnInformation signOnInformation) {
         NetworkDevice networkDevice = deviceRepository.findByMacAddress(signOnInformation.getMacAddress());
         if (networkDevice == null) {
             // string temporally hostname

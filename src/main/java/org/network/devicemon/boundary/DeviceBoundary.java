@@ -3,10 +3,15 @@ package org.network.devicemon.boundary;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.service.DeviceService;
 import org.network.devicemon.service.LeaseService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/device")
+@Validated
 public class DeviceBoundary {
 
     private final DeviceService deviceService;
@@ -19,12 +24,12 @@ public class DeviceBoundary {
     }
 
     @PutMapping("/sign-on")
-    public String signOn(@RequestBody SignOnInformation signOnInformation) {
+    public String signOn(@Valid @RequestBody SignOnInformation signOnInformation) {
          return deviceService.signOn(signOnInformation);
     }
 
     @PutMapping("/sign-off/{macAddress}")
-    public void signOff(@PathVariable(name = "macAddress") String macAddress) {
+    public void signOff(@NotNull @PathVariable(name = "macAddress") String macAddress) {
         leaseService.endLease(macAddress);
     }
 }
