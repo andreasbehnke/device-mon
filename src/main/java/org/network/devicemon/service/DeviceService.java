@@ -13,28 +13,23 @@ public class DeviceService {
 
     private final NetworkDeviceRepository deviceRepository;
 
-    private final LeaseService leaseService;
-
-    public DeviceService(NetworkDeviceRepository deviceRepository, LeaseService leaseService) {
+    public DeviceService(NetworkDeviceRepository deviceRepository) {
         this.deviceRepository = deviceRepository;
-        this.leaseService = leaseService;
     }
 
-    public String signOn(SignOnInformation signOnInformation) {
-        NetworkDevice networkDevice = deviceRepository.findByMacAddress(signOnInformation.getMacAddress());
-        if (networkDevice == null) {
-            // string temporally hostname
-            String hostname = hasText(signOnInformation.getClientHostname()) ? signOnInformation.getClientHostname() : toValidDnsHostName(signOnInformation.getMacAddress());
-
-            // create new network device
-            networkDevice = new NetworkDevice();
-            networkDevice.setMacAddress(signOnInformation.getMacAddress());
-            networkDevice.setHostname(hostname);
-            networkDevice.setApproved(false);
-            networkDevice = deviceRepository.save(networkDevice);
-        }
-        leaseService.startLease(networkDevice, signOnInformation);
-        return networkDevice.getHostname();
+    public NetworkDevice find(String macAddress) {
+        return deviceRepository.findByMacAddress(macAddress);
     }
 
+    public NetworkDevice create(SignOnInformation signOnInformation) {
+        // string temporally hostname
+        String hostname = hasText(signOnInformation.getClientHostname()) ? signOnInformation.getClientHostname() : toValidDnsHostName(signOnInformation.getMacAddress());
+
+        // create new network device
+        NetworkDevice networkDevice = new NetworkDevice();
+        networkDevice.setMacAddress(signOnInformation.getMacAddress());
+        networkDevice.setHostname(hostname);
+        networkDevice.setApproved(false);
+        return deviceRepository.save(networkDevice);
+    }
 }

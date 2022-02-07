@@ -14,18 +14,15 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class DeviceBoundary {
 
-    private final DeviceService deviceService;
-
     private final LeaseService leaseService;
 
-    public DeviceBoundary(DeviceService deviceService, LeaseService leaseService) {
-        this.deviceService = deviceService;
+    public DeviceBoundary(LeaseService leaseService) {
         this.leaseService = leaseService;
     }
 
     @PutMapping("/sign-on")
     public String signOn(@Valid @RequestBody SignOnInformation signOnInformation) {
-         return deviceService.signOn(signOnInformation);
+         return leaseService.startLease(signOnInformation);
     }
 
     @PutMapping("/sign-off/{macAddress}")

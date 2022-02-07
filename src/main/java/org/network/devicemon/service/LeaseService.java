@@ -14,13 +14,21 @@ import java.util.List;
 @Validated
 public class LeaseService {
 
+    private final DeviceService deviceService;
+
     private final NetworkDeviceLeaseRepository leaseRepository;
 
-    public LeaseService(NetworkDeviceLeaseRepository leaseRepository) {
+    public LeaseService(DeviceService deviceService, NetworkDeviceLeaseRepository leaseRepository) {
+        this.deviceService = deviceService;
         this.leaseRepository = leaseRepository;
     }
 
-    public void startLease(NetworkDevice device, SignOnInformation signOnInformation) {
+    public String startLease(SignOnInformation signOnInformation) {
+        NetworkDevice device = deviceService.find(signOnInformation.getMacAddress());
+        if (device == null) {
+            device = deviceService.create(signOnInformation);
+        }
+
         ZonedDateTime now = ZonedDateTime.now();
         // Check if there are open-ended leases for this device. Stop these, because one device can only have one lease at any one time.
         List<NetworkDeviceLease> openLeases = leaseRepository.findAllByNetworkDeviceAndLeaseEndIsNull(device);
@@ -34,6 +42,7 @@ public class LeaseService {
         startedLease.setDhcpServerName(signOnInformation.getDhcpServerName());
         startedLease.setInet4Address(signOnInformation.getInet4Address());
         leaseRepository.save(startedLease);
+        return device.getHostname();
     }
 
     public void endLease(String macAddress) {
