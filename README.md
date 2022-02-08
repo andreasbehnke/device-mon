@@ -5,14 +5,16 @@ Monitoring network device data of small networks.
 This tool lists all devices which have been registered to your local network by DHCP
 and supports providing individual host names to this devices. 
 
-The goal of this service is to identify and name thinks on your network and give them
-meaningful local domain names so it is easier to setup lots of small clients like IoT devices.
+The goal of this service is to identify and name things on your network and give them
+meaningful local domain names for easier setup of lots of small clients like IoT devices.
+Mikrotik routers are supported by a lease script. 
 
-*This is NOT a security feature, if you need a real secure network setup, you should setup
+*This is NOT a security feature - if you need a real secure network setup, you should setup
 802.1x and RADIUS server.*
 
 ## Start from source
 
+* cd backend
 * docker-compose up
 * ./mvnw spring-boot:run 
 
