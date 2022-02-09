@@ -12,14 +12,14 @@ class App extends React.Component {
         return (
             <>
                 <Typography variant={"h5"} gutterBottom>Network Device Monitor</Typography>
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} sx={{maxWidth: "1600px"}}>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>MAC</TableCell>
+                                <TableCell sx={{ display: ["none", "none", "table-cell"]}}>MAC</TableCell>
                                 <TableCell>IPv4</TableCell>
-                                <TableCell>DHCP Server</TableCell>
-                                <TableCell>Last seen</TableCell>
+                                <TableCell sx={{ display: ["none", "none", "none", "table-cell"]}}>DHCP Server</TableCell>
+                                <TableCell sx={{ display: ["none", "table-cell"]}}>Last seen</TableCell>
                                 <TableCell>Host name</TableCell>
                                 <TableCell/>
                             </TableRow>
