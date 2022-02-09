@@ -19,8 +19,8 @@ class App extends React.Component {
                                 <TableCell>MAC</TableCell>
                                 <TableCell>IPv4</TableCell>
                                 <TableCell>DHCP Server</TableCell>
-                                <TableCell>last seen</TableCell>
-                                <TableCell>host name</TableCell>
+                                <TableCell>Last seen</TableCell>
+                                <TableCell>Host name</TableCell>
                                 <TableCell/>
                             </TableRow>
                         </TableHead>

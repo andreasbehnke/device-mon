@@ -10,7 +10,7 @@ export function NewDeviceRow() {
         <TableCell>2022-02-07 20:20:29.018+00</TableCell>
         <TableCell><TextField variant={"standard"} value={"Galaxy-Tab-S5e"}></TextField></TableCell>
         <TableCell>
-            <IconButton aria-label="approve device" title={"approve device"}>
+            <IconButton aria-label="Approve device" title={"Approve device"}>
                 <AddIcon color={"primary"}/>
             </IconButton>
         </TableCell>

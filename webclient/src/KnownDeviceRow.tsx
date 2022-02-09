@@ -10,7 +10,7 @@ export function KnownDeviceRow() {
         <TableCell>2022-02-07 20:20:29.018+00</TableCell>
         <TableCell>Galaxy-Tab-S5e</TableCell>
         <TableCell>
-            <IconButton aria-label="forget device" title={"forget device"}>
+            <IconButton aria-label="Forget device" title={"Forget device"}>
                 <DeleteIcon/>
             </IconButton>
         </TableCell>
