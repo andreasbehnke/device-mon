@@ -1,6 +1,7 @@
 package org.network.devicemon.boundary;
 
 import org.junit.jupiter.api.Test;
+import org.network.devicemon.MacAddressFixture;
 import org.network.devicemon.model.SignOnInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,8 +42,10 @@ public class DeviceBoundaryTest {
         SignOnInformation information = new SignOnInformation();
         information.setDhcpServerName("dhcp-server-wlan");
         information.setInet4Address("1.1.1.9");
-        information.setMacAddress("B8:27:EB:33:EF:76");
-        assertEquals("B8-27-EB-33-EF-76", deviceBoundary.signOn(information));
+        String macAddress = MacAddressFixture.createRandomMacAddress();
+        information.setMacAddress(macAddress);
+        String expectedHostName = macAddress.replace(':', '-');
+        assertEquals(expectedHostName, deviceBoundary.signOn(information));
     }
 
     @Test
@@ -50,7 +53,7 @@ public class DeviceBoundaryTest {
         SignOnInformation information = new SignOnInformation();
         information.setDhcpServerName("dhcp-server-wlan");
         information.setInet4Address("1.1.1.9");
-        information.setMacAddress("B8:27:EB:33:EF:76");
+        information.setMacAddress(MacAddressFixture.createRandomMacAddress());
         information.setClientHostname("ClientHostName");
         assertEquals("ClientHostName", deviceBoundary.signOn(information));
     }
