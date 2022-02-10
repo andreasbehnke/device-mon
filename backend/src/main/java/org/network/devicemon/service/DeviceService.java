@@ -1,6 +1,7 @@
 package org.network.devicemon.service;
 
 import org.network.devicemon.entity.NetworkDevice;
+import org.network.devicemon.entity.NetworkDeviceLease;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.repository.NetworkDeviceRepository;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,11 @@ public class DeviceService {
         networkDevice.setMacAddress(signOnInformation.getMacAddress());
         networkDevice.setHostname(hostname);
         networkDevice.setApproved(false);
+        return deviceRepository.save(networkDevice);
+    }
+
+    public NetworkDevice updateActualLease(NetworkDevice networkDevice, NetworkDeviceLease lease) {
+        networkDevice.setActualLease(lease);
         return deviceRepository.save(networkDevice);
     }
 }

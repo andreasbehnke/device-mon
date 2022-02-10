@@ -3,10 +3,7 @@ package org.network.devicemon.entity;
 import com.sun.istack.NotNull;
 import org.network.devicemon.validation.MacAddress;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(indexes = {
@@ -24,6 +21,9 @@ public class NetworkDevice extends EntityBase {
 
     @Column(columnDefinition = "boolean default false")
     private boolean approved;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private NetworkDeviceLease actualLease;
 
     public String getMacAddress() {
         return macAddress;
@@ -47,5 +47,13 @@ public class NetworkDevice extends EntityBase {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public NetworkDeviceLease getActualLease() {
+        return actualLease;
+    }
+
+    public void setActualLease(NetworkDeviceLease actualLease) {
+        this.actualLease = actualLease;
     }
 }

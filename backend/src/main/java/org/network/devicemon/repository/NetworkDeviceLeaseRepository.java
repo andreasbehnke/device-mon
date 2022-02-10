@@ -9,7 +9,5 @@ import java.util.UUID;
 
 public interface NetworkDeviceLeaseRepository extends JpaRepository<NetworkDeviceLease, UUID> {
 
-    List<NetworkDeviceLease> findAllByNetworkDeviceAndLeaseEndIsNull(NetworkDevice device);
-
-    List<NetworkDeviceLease> findAllByNetworkDeviceMacAddressAndLeaseEndIsNull(String macAddress);
+    List<NetworkDeviceLease> findAllByMacAddressAndLeaseEndIsNull(String macAddress);
 }

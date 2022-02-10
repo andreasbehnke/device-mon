@@ -1,10 +1,10 @@
 package org.network.devicemon.entity;
 
 import org.network.devicemon.validation.Inet4Address;
+import org.network.devicemon.validation.MacAddress;
 
 import javax.persistence.Entity;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,8 +19,12 @@ import java.time.ZonedDateTime;
 })
 public class NetworkDeviceLease extends EntityBase {
 
-    @ManyToOne(optional = false)
-    private NetworkDevice networkDevice;
+    @NotNull
+    @MacAddress
+    private String macAddress;
+
+    @NotNull
+    private String hostname;
 
     @NotNull
     private ZonedDateTime leaseStart;
@@ -34,12 +38,20 @@ public class NetworkDeviceLease extends EntityBase {
     @Inet4Address
     private String inet4Address;
 
-    public NetworkDevice getNetworkDevice() {
-        return networkDevice;
+    public String getMacAddress() {
+        return macAddress;
     }
 
-    public void setNetworkDevice(NetworkDevice networkDevice) {
-        this.networkDevice = networkDevice;
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
     public ZonedDateTime getLeaseStart() {
