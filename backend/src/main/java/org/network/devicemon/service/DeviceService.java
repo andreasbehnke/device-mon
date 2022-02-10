@@ -6,6 +6,8 @@ import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.repository.NetworkDeviceRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static org.network.devicemon.service.MacAddressUtil.toValidDnsHostName;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -16,6 +18,10 @@ public class DeviceService {
 
     public DeviceService(NetworkDeviceRepository deviceRepository) {
         this.deviceRepository = deviceRepository;
+    }
+
+    public List<NetworkDevice> findAll() {
+        return deviceRepository.findAllOrderByLeaseEndDesc();
     }
 
     public NetworkDevice find(String macAddress) {

@@ -2,14 +2,16 @@ package org.network.devicemon.boundary;
 
 import org.junit.jupiter.api.Test;
 import org.network.devicemon.MacAddressFixture;
+import org.network.devicemon.model.NetworkDeviceListItem;
 import org.network.devicemon.model.SignOnInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.validation.ConstraintViolationException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class DeviceBoundaryTest {
@@ -56,5 +58,42 @@ public class DeviceBoundaryTest {
         information.setMacAddress(MacAddressFixture.createRandomMacAddress());
         information.setClientHostname("ClientHostName");
         assertEquals("ClientHostName", deviceBoundary.signOn(information));
+    }
+
+    private int getIndexOf(List<NetworkDeviceListItem> devices, String macAddress) {
+        for(int i = 0; i < devices.size(); i++) {
+            if (devices.get(i).getMacAddress().equals(macAddress)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Test
+    public void testGetAllDevices() {
+        SignOnInformation information = new SignOnInformation();
+        information.setDhcpServerName("dhcp-server-wlan");
+        information.setInet4Address("1.1.1.9");
+        String macAddress1 = MacAddressFixture.createRandomMacAddress();
+        information.setMacAddress(macAddress1);
+        information.setClientHostname("ClientHostName1");
+        deviceBoundary.signOn(information);
+        deviceBoundary.signOff(macAddress1); // set lease end
+        String macAddress2 = MacAddressFixture.createRandomMacAddress();
+        information.setMacAddress(macAddress2);
+        information.setClientHostname("ClientHostName2");
+        deviceBoundary.signOn(information);
+        deviceBoundary.signOff(macAddress2); // set lease end
+        String macAddress3 = MacAddressFixture.createRandomMacAddress();
+        information.setMacAddress(macAddress3);
+        information.setClientHostname("ClientHostName3");
+        deviceBoundary.signOn(information); // null lease end, should be first!
+        List<NetworkDeviceListItem> devices = deviceBoundary.getAllDevices();
+        // check order of result list
+        int index1 = getIndexOf(devices, macAddress1);
+        int index2 = getIndexOf(devices, macAddress2);
+        int index3 = getIndexOf(devices, macAddress3);
+        assertTrue(index3 < index2);
+        assertTrue(index2 < index1);
     }
 }
