@@ -1,14 +1,14 @@
 import React from "react";
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
-import axios from "axios";
 import {useAsync} from "react-async-hook";
 import {DeviceList} from "./DeviceList";
 import {Alert} from "@mui/material";
+import {DeviceService} from "./service/DeviceService";
 
 export function DeviceListLoader() {
 
     async function loadDevices() : Promise<Array<NetworkDeviceListItem>> {
-        const result = await axios.get<Array<NetworkDeviceListItem>>("/device");
+        const result = await DeviceService.getDeviceList();
         return result.data;
     }
 

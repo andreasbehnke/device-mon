@@ -15,7 +15,7 @@ export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerNam
 
     const [hostname, setHostname] = useState<string>(initialHostname);
 
-    return <TableRow key={macAddress}>
+    return <TableRow>
         <TableCell sx={{ display: ["none", "none", "table-cell"]}}>{ macAddress }</TableCell>
         <TableCell>{ inet4Address }</TableCell>
         <TableCell sx={{ display: ["none", "none", "none", "table-cell"]}}>{ dhcpServerName }</TableCell>

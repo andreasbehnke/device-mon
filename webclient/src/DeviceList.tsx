@@ -3,7 +3,8 @@ import {Paper, Table, TableCell, TableContainer, TableHead, TableRow} from "@mui
 import React, {useState} from "react";
 import {KnownDeviceRow} from "./KnownDeviceRow";
 import {NewDeviceRow} from "./NewDeviceRow";
-import axios from "axios";
+import {DeviceService} from "./service/DeviceService";
+import {useSnackbar} from "notistack";
 
 interface DeviceListProps {
     deviceList: Array<NetworkDeviceListItem>;
@@ -13,24 +14,36 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
 
     const [deviceList, setDeviceList] = useState(initialDeviceList);
 
+    const { enqueueSnackbar } = useSnackbar();
+
     async function onDeviceApprove(macAddress: string, hostname: string) {
-        const {data: device} = await axios.put<NetworkDeviceListItem>("/device/" + macAddress + "/approve", { hostname });
-        setDeviceList(prevState => {
-           return prevState.map(prevDevice => {
-              if (prevDevice.macAddress == device.macAddress) {
-                  return device;
-              } else {
-                  return prevDevice;
-              }
-           });
-        });
+        try {
+            const {data: device} = await DeviceService.approveDevice(macAddress, hostname);
+            setDeviceList(prevState => {
+                return prevState.map(prevDevice => {
+                    if (prevDevice.macAddress == device.macAddress) {
+                        return device;
+                    } else {
+                        return prevDevice;
+                    }
+                });
+            });
+            enqueueSnackbar("Approved device " + macAddress + " with name " + hostname, {variant: "info"});
+        } catch (e) {
+            enqueueSnackbar("Could not approve device", {variant: "error"});
+        }
     }
 
     async function onForgetDevice(macAddress: string) {
-        await axios.delete("/device/" + macAddress);
-        setDeviceList(prevState => {
-            return prevState.filter(prevDevice => prevDevice.macAddress != macAddress);
-        });
+        try {
+            await DeviceService.deleteDevice(macAddress);
+            setDeviceList(prevState => {
+                return prevState.filter(prevDevice => prevDevice.macAddress != macAddress);
+            });
+            enqueueSnackbar("Removed device " + macAddress, {variant: "info"});
+        } catch (e) {
+            enqueueSnackbar("Could not forget device", {variant: "error"});
+        }
     }
 
     return <TableContainer component={Paper} sx={{maxWidth: "1600px"}}>
@@ -47,8 +60,8 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
             </TableHead>
             {
                 deviceList.map((device) => {
-                    if (device.approved) return <KnownDeviceRow device={device} onForgetDevice={onForgetDevice}/>;
-                    else return <NewDeviceRow device={device} onDeviceApprove={onDeviceApprove} onForgetDevice={onForgetDevice}/>;
+                    if (device.approved) return <KnownDeviceRow key={device.macAddress} device={device} onForgetDevice={onForgetDevice}/>;
+                    else return <NewDeviceRow key={device.macAddress} device={device} onDeviceApprove={onDeviceApprove} onForgetDevice={onForgetDevice}/>;
                 })
             }
         </Table>

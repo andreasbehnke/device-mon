@@ -5,17 +5,20 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {DeviceListLoader} from "./DeviceListLoader";
+import {SnackbarProvider} from "notistack";
 
 class App extends React.Component {
     theme = createTheme({palette: {mode: "dark"}});
     render() {
         return (
             <ThemeProvider theme={this.theme}>
-                <CssBaseline />
-                <Box sx={{m: 3}}>
-                    <Typography variant={"h4"} gutterBottom>Network Device Monitor</Typography>
-                    <DeviceListLoader/>
-                </Box>
+                <SnackbarProvider maxSnack={2} anchorOrigin={{vertical: "top", horizontal: "right"}}>
+                    <CssBaseline />
+                    <Box sx={{m: 3}}>
+                        <Typography variant={"h4"} gutterBottom>Network Device Monitor</Typography>
+                        <DeviceListLoader/>
+                    </Box>
+                </SnackbarProvider>
             </ThemeProvider>
         );
     }
