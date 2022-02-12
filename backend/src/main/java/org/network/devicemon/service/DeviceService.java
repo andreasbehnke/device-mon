@@ -7,7 +7,6 @@ import org.network.devicemon.repository.NetworkDeviceRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.net.IDN;
 import java.util.List;
 
 import static org.network.devicemon.service.MacAddressUtil.toValidDnsHostName;
@@ -23,7 +22,7 @@ public class DeviceService {
     }
 
     public List<NetworkDevice> findAll() {
-        return deviceRepository.findAllOrderByLeaseEndDesc();
+        return deviceRepository.findAllByOrderByApprovedAscActualLeaseLeaseEndDesc();
     }
 
     public NetworkDevice find(String macAddress) {
