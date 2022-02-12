@@ -2,9 +2,14 @@ import {IconButton, TableCell, TableRow, TextField} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React, {useState} from "react";
 import moment from "moment";
-import {DeviceRowProps} from "./DeviceRowProps";
+import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 
-export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname } } : DeviceRowProps) {
+export interface NewDeviceRowProps {
+    device: NetworkDeviceListItem,
+    onDeviceApprove: (macAddress: string, hostname: string) => void,
+}
+
+export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname }, onDeviceApprove } : NewDeviceRowProps) {
 
     const [hostname, setHostname] = useState<string>(initialHostname);
 
@@ -15,7 +20,7 @@ export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerNam
         <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>
         <TableCell><TextField size={"small"} variant={"filled"} hiddenLabel value={hostname} onChange={event => setHostname(event.target.value)} /></TableCell>
         <TableCell>
-            <IconButton aria-label="Approve device" title={"Approve device"}>
+            <IconButton aria-label="Approve device" title={"Approve device"} onClick={() => onDeviceApprove(macAddress, hostname)}>
                 <AddIcon color={"primary"}/>
             </IconButton>
         </TableCell>

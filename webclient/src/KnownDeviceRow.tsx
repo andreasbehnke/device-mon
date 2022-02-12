@@ -2,9 +2,13 @@ import {IconButton, TableCell, TableRow} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
 import moment from "moment";
-import {DeviceRowProps} from "./DeviceRowProps";
+import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 
-export function KnownDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname } } : DeviceRowProps) {
+export interface KnownDeviceRowProps {
+    device: NetworkDeviceListItem,
+}
+
+export function KnownDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname } } : KnownDeviceRowProps) {
     return <TableRow key={macAddress}>
         <TableCell sx={{ display: ["none", "none", "table-cell"]}}>{macAddress}</TableCell>
         <TableCell>{inet4Address}</TableCell>

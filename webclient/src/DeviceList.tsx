@@ -1,10 +1,31 @@
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 import {Paper, Table, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 import {KnownDeviceRow} from "./KnownDeviceRow";
 import {NewDeviceRow} from "./NewDeviceRow";
+import axios from "axios";
 
-export function DeviceList(props: { deviceList: Array<NetworkDeviceListItem> }) {
+interface DeviceListProps {
+    deviceList: Array<NetworkDeviceListItem>;
+}
+
+export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
+
+    const [deviceList, setDeviceList] = useState(initialDeviceList);
+
+    async function onDeviceApprove(macAddress: string, hostname: string) {
+        const {data: device} = await axios.put<NetworkDeviceListItem>("/device/" + macAddress + "/approve", { hostname });
+        setDeviceList(prevState => {
+           return prevState.map(prevDevice => {
+              if (prevDevice.macAddress == device.macAddress) {
+                  return device;
+              } else {
+                  return prevDevice;
+              }
+           });
+        });
+    }
+
     return <TableContainer component={Paper} sx={{maxWidth: "1600px"}}>
         <Table>
             <TableHead>
@@ -18,9 +39,9 @@ export function DeviceList(props: { deviceList: Array<NetworkDeviceListItem> }) 
                 </TableRow>
             </TableHead>
             {
-                props.deviceList.map((device) => {
+                deviceList.map((device) => {
                     if (device.approved) return <KnownDeviceRow device={device}/>;
-                    else return <NewDeviceRow device={device}/>;
+                    else return <NewDeviceRow device={device} onDeviceApprove={onDeviceApprove}/>;
                 })
             }
         </Table>
