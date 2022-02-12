@@ -6,9 +6,10 @@ import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 
 export interface KnownDeviceRowProps {
     device: NetworkDeviceListItem,
+    onForgetDevice: (macAddress: string) => void,
 }
 
-export function KnownDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname } } : KnownDeviceRowProps) {
+export function KnownDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname }, onForgetDevice } : KnownDeviceRowProps) {
     return <TableRow key={macAddress}>
         <TableCell sx={{ display: ["none", "none", "table-cell"]}}>{macAddress}</TableCell>
         <TableCell>{inet4Address}</TableCell>
@@ -16,7 +17,7 @@ export function KnownDeviceRow({ device: { macAddress, inet4Address, dhcpServerN
         <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>
         <TableCell>{hostname}</TableCell>
         <TableCell>
-            <IconButton aria-label="Forget device" title={"Forget device"}>
+            <IconButton aria-label="Forget device" title={"Forget device"} onClick={() => onForgetDevice(macAddress)}>
                 <DeleteIcon/>
             </IconButton>
         </TableCell>

@@ -3,13 +3,15 @@ import AddIcon from "@mui/icons-material/Add";
 import React, {useState} from "react";
 import moment from "moment";
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface NewDeviceRowProps {
     device: NetworkDeviceListItem,
     onDeviceApprove: (macAddress: string, hostname: string) => void,
+    onForgetDevice: (macAddress: string) => void,
 }
 
-export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname }, onDeviceApprove } : NewDeviceRowProps) {
+export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname }, onDeviceApprove, onForgetDevice } : NewDeviceRowProps) {
 
     const [hostname, setHostname] = useState<string>(initialHostname);
 
@@ -22,6 +24,9 @@ export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerNam
         <TableCell>
             <IconButton aria-label="Approve device" title={"Approve device"} onClick={() => onDeviceApprove(macAddress, hostname)}>
                 <AddIcon color={"primary"}/>
+            </IconButton>
+            <IconButton aria-label="Forget device" title={"Forget device"} onClick={() => onForgetDevice(macAddress)}>
+                <DeleteIcon/>
             </IconButton>
         </TableCell>
     </TableRow>;

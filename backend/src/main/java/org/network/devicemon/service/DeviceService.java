@@ -7,6 +7,7 @@ import org.network.devicemon.repository.NetworkDeviceRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.network.devicemon.service.MacAddressUtil.toValidDnsHostName;
@@ -29,6 +30,7 @@ public class DeviceService {
         return deviceRepository.findByMacAddress(macAddress);
     }
 
+    @Transactional
     public NetworkDevice create(SignOnInformation signOnInformation) {
         // string temporally hostname
         String hostname = hasText(signOnInformation.getClientHostname()) ? signOnInformation.getClientHostname() : toValidDnsHostName(signOnInformation.getMacAddress());
@@ -41,11 +43,13 @@ public class DeviceService {
         return deviceRepository.save(networkDevice);
     }
 
+    @Transactional
     public NetworkDevice updateActualLease(NetworkDevice networkDevice, NetworkDeviceLease lease) {
         networkDevice.setActualLease(lease);
         return deviceRepository.save(networkDevice);
     }
 
+    @Transactional
     public NetworkDevice approve(String macAddress, String hostname) {
         NetworkDevice networkDevice = find(macAddress);
         if (networkDevice != null) {
@@ -55,5 +59,10 @@ public class DeviceService {
         } else {
             throw new EntityNotFoundException("Missing device " + macAddress);
         }
+    }
+
+    @Transactional
+    public void delete(String macAddress) {
+        deviceRepository.deleteByMacAddress(macAddress);
     }
 }

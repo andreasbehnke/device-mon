@@ -7,6 +7,7 @@ import org.network.devicemon.repository.NetworkDeviceLeaseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class LeaseService {
         this.leaseRepository = leaseRepository;
     }
 
+    @Transactional
     public String startLease(SignOnInformation signOnInformation) {
         NetworkDevice device = deviceService.find(signOnInformation.getMacAddress());
         if (device == null) {
@@ -46,6 +48,7 @@ public class LeaseService {
         return device.getHostname();
     }
 
+    @Transactional
     public void endLease(String macAddress) {
         ZonedDateTime now = ZonedDateTime.now();
         // Check if there are open-ended leases for this device. Stop these, because one device can only have one lease at any one time.

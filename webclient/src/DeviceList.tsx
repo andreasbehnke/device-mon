@@ -26,6 +26,13 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
         });
     }
 
+    async function onForgetDevice(macAddress: string) {
+        await axios.delete("/device/" + macAddress);
+        setDeviceList(prevState => {
+            return prevState.filter(prevDevice => prevDevice.macAddress != macAddress);
+        });
+    }
+
     return <TableContainer component={Paper} sx={{maxWidth: "1600px"}}>
         <Table>
             <TableHead>
@@ -40,8 +47,8 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
             </TableHead>
             {
                 deviceList.map((device) => {
-                    if (device.approved) return <KnownDeviceRow device={device}/>;
-                    else return <NewDeviceRow device={device} onDeviceApprove={onDeviceApprove}/>;
+                    if (device.approved) return <KnownDeviceRow device={device} onForgetDevice={onForgetDevice}/>;
+                    else return <NewDeviceRow device={device} onDeviceApprove={onDeviceApprove} onForgetDevice={onForgetDevice}/>;
                 })
             }
         </Table>

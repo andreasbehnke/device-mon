@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +45,11 @@ public class DeviceBoundary {
     @PutMapping("/{macAddress}/approve")
     public NetworkDeviceListItem approve(@NotEmpty @PathVariable(name = "macAddress") String macAddress, @Valid @RequestBody ApproveDevice approveDevice) {
         return new NetworkDeviceListItem(deviceService.approve(macAddress, approveDevice.getHostname()));
+    }
+
+    @DeleteMapping("/{macAddress}")
+    public void forgetDevice(@NotEmpty @PathVariable(name = "macAddress") String macAddress) {
+        deviceService.delete(macAddress);
     }
 
 }
