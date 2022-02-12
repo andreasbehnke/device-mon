@@ -1,6 +1,5 @@
 package org.network.devicemon.repository;
 
-import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.entity.NetworkDeviceLease;
 import org.springframework.data.jpa.repository.JpaRepository;
 

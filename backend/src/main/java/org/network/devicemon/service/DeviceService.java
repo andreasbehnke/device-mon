@@ -22,7 +22,7 @@ public class DeviceService {
     }
 
     public List<NetworkDevice> findAll() {
-        return deviceRepository.findAllByOrderByApprovedAscActualLeaseLeaseEndDesc();
+        return deviceRepository.findAllByOrderByApprovedAscActualLeaseLeaseEndDescActualLeaseLeaseStartDesc();
     }
 
     public NetworkDevice find(String macAddress) {
