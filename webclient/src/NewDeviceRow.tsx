@@ -13,7 +13,7 @@ export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerNam
         <TableCell>{ inet4Address }</TableCell>
         <TableCell sx={{ display: ["none", "none", "none", "table-cell"]}}>{ dhcpServerName }</TableCell>
         <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>
-        <TableCell><TextField variant={"standard"} value={hostname} onChange={event => setHostname(event.target.value)} /></TableCell>
+        <TableCell><TextField size={"small"} variant={"filled"} hiddenLabel value={hostname} onChange={event => setHostname(event.target.value)} /></TableCell>
         <TableCell>
             <IconButton aria-label="Approve device" title={"Approve device"}>
                 <AddIcon color={"primary"}/>
