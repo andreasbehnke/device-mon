@@ -26,6 +26,10 @@ public class DeviceService {
         return deviceRepository.findAllByOrderByApprovedAscActualLeaseLeaseEndDescActualLeaseLeaseStartDesc();
     }
 
+    public List<NetworkDevice> findAllOrderByHostname() {
+        return deviceRepository.findAllByOrderByHostname();
+    }
+
     public NetworkDevice find(String macAddress) {
         return deviceRepository.findByMacAddress(macAddress);
     }

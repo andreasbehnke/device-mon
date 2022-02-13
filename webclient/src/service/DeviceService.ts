@@ -7,6 +7,10 @@ export class DeviceService {
         return axios.get<Array<NetworkDeviceListItem>>("/api/device");
     }
 
+    static downloadBackup() : void {
+        window.location.href = "http://localhost:8080/api/device/backup";
+    }
+
     static approveDevice(macAddress: string, hostname: string) : Promise<AxiosResponse<NetworkDeviceListItem>> {
         return axios.put<NetworkDeviceListItem>("/api/device/" + macAddress + "/approve", { hostname });
     }

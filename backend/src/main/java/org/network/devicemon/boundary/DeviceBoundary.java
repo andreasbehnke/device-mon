@@ -1,6 +1,7 @@
 package org.network.devicemon.boundary;
 
 import org.network.devicemon.model.ApproveDevice;
+import org.network.devicemon.model.NetworkDeviceBackupItem;
 import org.network.devicemon.model.NetworkDeviceListItem;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.service.DeviceService;
@@ -8,6 +9,7 @@ import org.network.devicemon.service.LeaseService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -30,6 +32,12 @@ public class DeviceBoundary {
     @GetMapping
     public List<NetworkDeviceListItem> getAllDevices() {
         return deviceService.findAll().stream().map(NetworkDeviceListItem::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/backup")
+    public List<NetworkDeviceBackupItem> getDevicesBackup(HttpServletResponse response) {
+        response.setHeader("Content-Disposition","attachment; filename=\"hostnames_backup.json\"");
+        return deviceService.findAllOrderByHostname().stream().map(NetworkDeviceBackupItem::new).collect(Collectors.toList());
     }
 
     @PutMapping("/sign-on")

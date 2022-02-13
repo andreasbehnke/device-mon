@@ -16,7 +16,7 @@ export function KnownDeviceRow({ device: { macAddress, inet4Address, dhcpServerN
         <TableCell sx={{ display: ["none", "none", "none", "table-cell"]}}>{dhcpServerName}</TableCell>
         <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>
         <TableCell>{hostname}</TableCell>
-        <TableCell>
+        <TableCell align={"right"}>
             <IconButton aria-label="Forget device" title={"Forget device"} onClick={() => onForgetDevice(macAddress)}>
                 <DeleteIcon/>
             </IconButton>

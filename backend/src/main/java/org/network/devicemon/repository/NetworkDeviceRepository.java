@@ -13,5 +13,7 @@ public interface NetworkDeviceRepository extends JpaRepository<NetworkDevice, UU
 
     List<NetworkDevice> findAllByOrderByApprovedAscActualLeaseLeaseEndDescActualLeaseLeaseStartDesc();
 
+    List<NetworkDevice> findAllByOrderByHostname();
+
     void deleteByMacAddress(String macAddress);
 }

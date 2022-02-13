@@ -74,7 +74,7 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
 
     return (
         <>
-            <TableContainer component={Paper} sx={{maxWidth: "1600px"}}>
+            <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>

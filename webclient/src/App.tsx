@@ -1,10 +1,10 @@
 import React from 'react';
-import {Box, createTheme, CssBaseline, ThemeProvider, Typography} from "@mui/material";
+import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import {DeviceListLoader} from "./DeviceListLoader";
+import {DeviceListPage} from "./DeviceListPage";
 import {SnackbarProvider} from "notistack";
 
 class App extends React.Component {
@@ -12,12 +12,9 @@ class App extends React.Component {
     render() {
         return (
             <ThemeProvider theme={this.theme}>
-                <SnackbarProvider maxSnack={2} anchorOrigin={{vertical: "top", horizontal: "right"}}>
+                <SnackbarProvider autoHideDuration={5000}>
                     <CssBaseline />
-                    <Box sx={{m: 3}}>
-                        <Typography variant={"h4"} gutterBottom>Network Device Monitor</Typography>
-                        <DeviceListLoader/>
-                    </Box>
+                    <DeviceListPage />
                 </SnackbarProvider>
             </ThemeProvider>
         );
