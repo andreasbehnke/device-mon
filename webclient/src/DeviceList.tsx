@@ -99,8 +99,8 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
                     <DialogContentText>Do you really want to forget device ?</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleConfirmForgetClose}>Cancel</Button>
-                    <Button onClick={forgetDevice} autoFocus>Forget device</Button>
+                    <Button onClick={handleConfirmForgetClose} color={"inherit"}>Cancel</Button>
+                    <Button onClick={forgetDevice} autoFocus color={"primary"}>Forget device</Button>
                 </DialogActions>
             </Dialog>
         </>

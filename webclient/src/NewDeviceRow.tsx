@@ -22,7 +22,7 @@ export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerNam
         <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>
         <TableCell><TextField size={"small"} variant={"filled"} hiddenLabel value={hostname} onChange={event => setHostname(event.target.value)} /></TableCell>
         <TableCell>
-            <IconButton aria-label="Approve device" title={"Approve device"} onClick={() => onDeviceApprove(macAddress, hostname)}>
+            <IconButton aria-label="Approve device" title={"Approve device"} onClick={() => onDeviceApprove(macAddress, hostname)} color={"primary"}>
                 <AddIcon color={"primary"}/>
             </IconButton>
             <IconButton aria-label="Forget device" title={"Forget device"} onClick={() => onForgetDevice(macAddress)}>
