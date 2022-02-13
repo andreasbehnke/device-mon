@@ -3,6 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
 import moment from "moment";
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
+import CircleIcon from '@mui/icons-material/Circle';
 
 export interface KnownDeviceRowProps {
     device: NetworkDeviceListItem,
@@ -12,6 +13,9 @@ export interface KnownDeviceRowProps {
 export function KnownDeviceRow({ device: { activeLease, macAddress, vendor, inet4Address, dhcpServerName, lastSeen, hostname }, onForgetDevice } : KnownDeviceRowProps) {
 
     return <TableRow sx={{backgroundColor: activeLease ? "inherit" : "#333" }}>
+        <TableCell>
+            <CircleIcon sx={{color: (activeLease) ? "darkgreen" : "darkred"}} />
+        </TableCell>
         <TableCell sx={{ display: ["none", "none", "table-cell"]}}>{macAddress}</TableCell>
         <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>{vendor}</TableCell>
         <TableCell>{inet4Address}</TableCell>

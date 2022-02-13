@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import moment from "moment";
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CircleIcon from "@mui/icons-material/Circle";
 
 export interface NewDeviceRowProps {
     device: NetworkDeviceListItem,
@@ -11,11 +12,14 @@ export interface NewDeviceRowProps {
     onForgetDevice: (macAddress: string) => void,
 }
 
-export function NewDeviceRow({ device: { macAddress, vendor, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname }, onDeviceApprove, onForgetDevice } : NewDeviceRowProps) {
+export function NewDeviceRow({ device: { activeLease, macAddress, vendor, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname }, onDeviceApprove, onForgetDevice } : NewDeviceRowProps) {
 
     const [hostname, setHostname] = useState<string>(initialHostname);
 
     return <TableRow>
+        <TableCell>
+            <CircleIcon sx={{color: (activeLease) ? "darkgreen" : "darkred"}} />
+        </TableCell>
         <TableCell sx={{ display: ["none", "none", "table-cell"]}}>{ macAddress }</TableCell>
         <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>{vendor}</TableCell>
         <TableCell>{ inet4Address }</TableCell>

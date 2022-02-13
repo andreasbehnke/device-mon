@@ -78,6 +78,7 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
                 <Table>
                     <TableHead>
                         <TableRow>
+                            <TableCell />
                             <TableCell sx={{display: ["none", "none", "table-cell"]}}>MAC</TableCell>
                             <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>Vendor</TableCell>
                             <TableCell>IPv4</TableCell>
