@@ -1,4 +1,5 @@
 export interface NetworkDeviceListItem {
+    activeLease: boolean;
     macAddress: string;
     vendor: string;
     inet4Address: string;

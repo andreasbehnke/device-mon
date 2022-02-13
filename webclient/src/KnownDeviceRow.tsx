@@ -9,8 +9,9 @@ export interface KnownDeviceRowProps {
     onForgetDevice: (macAddress: string) => void,
 }
 
-export function KnownDeviceRow({ device: { macAddress, vendor, inet4Address, dhcpServerName, lastSeen, hostname }, onForgetDevice } : KnownDeviceRowProps) {
-    return <TableRow>
+export function KnownDeviceRow({ device: { activeLease, macAddress, vendor, inet4Address, dhcpServerName, lastSeen, hostname }, onForgetDevice } : KnownDeviceRowProps) {
+
+    return <TableRow sx={{backgroundColor: activeLease ? "inherit" : "#333" }}>
         <TableCell sx={{ display: ["none", "none", "table-cell"]}}>{macAddress}</TableCell>
         <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>{vendor}</TableCell>
         <TableCell>{inet4Address}</TableCell>

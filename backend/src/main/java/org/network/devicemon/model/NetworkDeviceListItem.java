@@ -7,6 +7,8 @@ import java.time.ZonedDateTime;
 
 public class NetworkDeviceListItem {
 
+    private boolean activeLease;
+
     private String macAddress;
 
     private String vendor;
@@ -31,8 +33,16 @@ public class NetworkDeviceListItem {
             inet4Address = networkDeviceLease.getInet4Address();
             dhcpServerName = networkDeviceLease.getDhcpServerName();
             lastSeen = networkDeviceLease.getLeaseEnd();
+            activeLease = false;
+            if (lastSeen == null) {
+                lastSeen = networkDeviceLease.getLeaseStart();
+                activeLease = true;
+            }
         }
-        lastSeen = lastSeen == null ? ZonedDateTime.now() : lastSeen;
+    }
+
+    public boolean isActiveLease() {
+        return activeLease;
     }
 
     public String getMacAddress() {
