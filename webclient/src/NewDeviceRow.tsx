@@ -11,12 +11,13 @@ export interface NewDeviceRowProps {
     onForgetDevice: (macAddress: string) => void,
 }
 
-export function NewDeviceRow({ device: { macAddress, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname }, onDeviceApprove, onForgetDevice } : NewDeviceRowProps) {
+export function NewDeviceRow({ device: { macAddress, vendor, inet4Address, dhcpServerName, lastSeen, hostname : initialHostname }, onDeviceApprove, onForgetDevice } : NewDeviceRowProps) {
 
     const [hostname, setHostname] = useState<string>(initialHostname);
 
     return <TableRow>
         <TableCell sx={{ display: ["none", "none", "table-cell"]}}>{ macAddress }</TableCell>
+        <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>{vendor}</TableCell>
         <TableCell>{ inet4Address }</TableCell>
         <TableCell sx={{ display: ["none", "none", "none", "table-cell"]}}>{ dhcpServerName }</TableCell>
         <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>

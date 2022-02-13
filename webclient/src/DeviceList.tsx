@@ -79,6 +79,7 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{display: ["none", "none", "table-cell"]}}>MAC</TableCell>
+                            <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>Vendor</TableCell>
                             <TableCell>IPv4</TableCell>
                             <TableCell sx={{display: ["none", "none", "none", "table-cell"]}}>DHCP Server</TableCell>
                             <TableCell sx={{display: ["none", "table-cell"]}}>Last seen</TableCell>

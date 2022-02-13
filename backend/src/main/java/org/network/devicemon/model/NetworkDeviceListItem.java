@@ -9,6 +9,8 @@ public class NetworkDeviceListItem {
 
     private String macAddress;
 
+    private String vendor;
+
     private String inet4Address;
 
     private String dhcpServerName;
@@ -19,8 +21,9 @@ public class NetworkDeviceListItem {
 
     private boolean approved;
 
-    public NetworkDeviceListItem(NetworkDevice networkDevice) {
+    public NetworkDeviceListItem(NetworkDevice networkDevice, String vendor) {
         macAddress = networkDevice.getMacAddress();
+        this.vendor = vendor;
         hostname = networkDevice.getHostname();
         approved = networkDevice.isApproved();
         NetworkDeviceLease networkDeviceLease = networkDevice.getActualLease();
@@ -34,6 +37,10 @@ public class NetworkDeviceListItem {
 
     public String getMacAddress() {
         return macAddress;
+    }
+
+    public String getVendor() {
+        return vendor;
     }
 
     public String getInet4Address() {

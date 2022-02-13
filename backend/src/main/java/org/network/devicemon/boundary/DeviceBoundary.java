@@ -1,11 +1,13 @@
 package org.network.devicemon.boundary;
 
+import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.model.ApproveDevice;
 import org.network.devicemon.model.NetworkDeviceBackupItem;
 import org.network.devicemon.model.NetworkDeviceListItem;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.service.DeviceService;
 import org.network.devicemon.service.LeaseService;
+import org.network.devicemon.service.MacVendorService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +26,19 @@ public class DeviceBoundary {
 
     private final DeviceService deviceService;
 
-    public DeviceBoundary(LeaseService leaseService, DeviceService deviceService) {
+    private final MacVendorService macVendorService;
+
+    public DeviceBoundary(LeaseService leaseService, DeviceService deviceService, MacVendorService macVendorService) {
         this.leaseService = leaseService;
         this.deviceService = deviceService;
+        this.macVendorService = macVendorService;
     }
 
     @GetMapping
     public List<NetworkDeviceListItem> getAllDevices() {
-        return deviceService.findAll().stream().map(NetworkDeviceListItem::new).collect(Collectors.toList());
+        return deviceService.findAll().stream()
+                .map(networkDevice -> new NetworkDeviceListItem(networkDevice, macVendorService.getVendorInformation(networkDevice.getMacAddress())))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/backup")
@@ -52,7 +59,8 @@ public class DeviceBoundary {
 
     @PutMapping("/{macAddress}/approve")
     public NetworkDeviceListItem approve(@NotEmpty @PathVariable(name = "macAddress") String macAddress, @Valid @RequestBody ApproveDevice approveDevice) {
-        return new NetworkDeviceListItem(deviceService.approve(macAddress, approveDevice.getHostname()));
+        NetworkDevice networkDevice = deviceService.approve(macAddress, approveDevice.getHostname());
+        return new NetworkDeviceListItem(networkDevice, macVendorService.getVendorInformation(networkDevice.getMacAddress()));
     }
 
     @DeleteMapping("/{macAddress}")
