@@ -19,7 +19,6 @@ public class EntityBase {
 
     @Id
     @GeneratedValue
-    @Type(type = "pg-uuid")
     @NotNull(groups = OnEntityUpdate.class)
     private UUID id;
 
