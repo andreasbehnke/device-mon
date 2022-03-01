@@ -11,4 +11,5 @@ RUN npm run build
 # **** runtime stage ****
 FROM nginx:stable
 RUN apt-get update && apt-get upgrade -y
+COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /workspace/app/build/ /usr/share/nginx/html
