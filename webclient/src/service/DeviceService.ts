@@ -8,7 +8,8 @@ export class DeviceService {
     }
 
     static downloadBackup() : void {
-        window.location.href = "http://localhost:8080/api/device/backup";
+        // this will not work in development mode!
+        window.location.href = "/api/device/backup";
     }
 
     static approveDevice(macAddress: string, hostname: string) : Promise<AxiosResponse<NetworkDeviceListItem>> {
