@@ -2,42 +2,42 @@ version: '3.5'
 
 services:
   postgres:
-    container_name: postgres_device_mon
-    image: postgres
+    container_name: devicemon_dev_postgres
+    image: postgres:14-bullseye
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-changeme}
       PGDATA: /data/postgres
     volumes:
-      - postgres_device_mon:/data/postgres
+      - devicemon_dev_postgres:/data/postgres
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${DATABASE_PORT:-5432}:5432"
     networks:
-      - postgres_device_mon
+      - devicemon_dev_postgres
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin_device_mon
+    container_name: devicemon_dev_pgadmin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - pgadmin_device_mon:/root/.pgadmin
+      - devicemon_dev_pgadmin:/root/.pgadmin
 
     ports:
       - "127.0.0.1:${PGADMIN_PORT:-8090}:80"
     networks:
-      - postgres_device_mon
+      - devicemon_dev_postgres
     restart: unless-stopped
 
 networks:
-  postgres_device_mon:
+  devicemon_dev_postgres:
     driver: bridge
 
 volumes:
-  postgres_device_mon:
-    name: "postgres_device_mon"
-  pgadmin_device_mon:
-    name: "pgadmin_auth_jwt"
+  devicemon_dev_postgres:
+    name: "devicemon_dev_postgres"
+  devicemon_dev_pgadmin:
+    name: "devicemon_dev_pgadmin_auth_jwt"
