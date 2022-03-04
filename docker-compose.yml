@@ -10,12 +10,12 @@ services:
     volumes:
       - devicemon_postgres:/data/postgres
     ports:
-      - "${DATABASE_PORT:-5432}:${DATABASE_PORT:-5432}"
+      - ${DATABASE_PORT:-5432}:${DATABASE_PORT:-5432}
     networks:
       - devicemon
     restart: unless-stopped
   backend:
-    image: devicemon_backend:latest
+    image: ghcr.io/andreasbehnke/devicemon_backend:latest
     depends_on: [postgres]
     environment:
       DATABASE_USER: ${DATABASE_USER:-postgres}
@@ -25,10 +25,10 @@ services:
     networks:
       - devicemon
   webclient:
-    image: devicemon_webclient:latest
+    image: ghcr.io/andreasbehnke/devicemon_webclient:latest
     depends_on: [backend]
     ports:
-      - "80:80"
+      - 80:80
     networks:
       - devicemon
 
