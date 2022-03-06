@@ -39,7 +39,7 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
             const {data: device} = await DeviceService.approveDevice(macAddress, hostname);
             setDeviceList(prevState => {
                 return prevState.map(prevDevice => {
-                    if (prevDevice.macAddress == device.macAddress) {
+                    if (prevDevice.macAddress === device.macAddress) {
                         return device;
                     } else {
                         return prevDevice;
@@ -57,7 +57,7 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
             try {
                 await DeviceService.deleteDevice(forgetMacAddress);
                 setDeviceList(prevState => {
-                    return prevState.filter(prevDevice => prevDevice.macAddress != forgetMacAddress);
+                    return prevState.filter(prevDevice => prevDevice.macAddress !== forgetMacAddress);
                 });
                 enqueueSnackbar("Removed device " + forgetMacAddress, {variant: "info"});
             } catch (e) {
