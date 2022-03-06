@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(indexes = {
-        @Index(name = "unique_macAddress", columnList = "macAddress"),
+        @Index(name = "unique_macAddress", columnList = "macAddress", unique = true),
         @Index(name = "idx_approved", columnList = "approved")
 })
 public class NetworkDevice extends EntityBase {
