@@ -1,9 +1,9 @@
 import {IconButton, TableCell, TableRow} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
-import moment from "moment";
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 import CircleIcon from '@mui/icons-material/Circle';
+import {DeviceService} from "./service/DeviceService";
 
 export interface KnownDeviceRowProps {
     device: NetworkDeviceListItem,
@@ -20,7 +20,7 @@ export function KnownDeviceRow({ device: { activeLease, macAddress, vendor, inet
         <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>{vendor}</TableCell>
         <TableCell>{inet4Address}</TableCell>
         <TableCell sx={{ display: ["none", "none", "none", "table-cell"]}}>{dhcpServerName}</TableCell>
-        <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>
+        <TableCell sx={{ display: ["none", "table-cell"]}}>{DeviceService.lastSeen(lastSeen)}</TableCell>
         <TableCell>{hostname}</TableCell>
         <TableCell align={"right"}>
             <IconButton aria-label="Forget device" title={"Forget device"} onClick={() => onForgetDevice(macAddress)}>

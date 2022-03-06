@@ -1,10 +1,10 @@
 import {IconButton, TableCell, TableRow, TextField} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React, {useState} from "react";
-import moment from "moment";
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CircleIcon from "@mui/icons-material/Circle";
+import {DeviceService} from "./service/DeviceService";
 
 export interface NewDeviceRowProps {
     device: NetworkDeviceListItem,
@@ -24,7 +24,7 @@ export function NewDeviceRow({ device: { activeLease, macAddress, vendor, inet4A
         <TableCell sx={{display: ["none", "none", "none", "none", "table-cell"]}}>{vendor}</TableCell>
         <TableCell>{ inet4Address }</TableCell>
         <TableCell sx={{ display: ["none", "none", "none", "table-cell"]}}>{ dhcpServerName }</TableCell>
-        <TableCell sx={{ display: ["none", "table-cell"]}}>{moment(lastSeen).fromNow()}</TableCell>
+        <TableCell sx={{ display: ["none", "table-cell"]}}>{DeviceService.lastSeen(lastSeen)}</TableCell>
         <TableCell><TextField size={"small"} variant={"filled"} hiddenLabel value={hostname} onChange={event => setHostname(event.target.value)} /></TableCell>
         <TableCell align={"right"}>
             <IconButton aria-label="Approve device" title={"Approve device"} onClick={() => onDeviceApprove(macAddress, hostname)} color={"primary"}>

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.network.devicemon.service.MacAddressUtil.toValidDnsHostName;
 import static org.springframework.util.StringUtils.hasText;
@@ -32,6 +35,19 @@ public class DeviceService {
 
     public NetworkDevice find(String macAddress) {
         return deviceRepository.findByMacAddress(macAddress);
+    }
+
+    @Transactional
+    public void restore(List<NetworkDevice> backup) {
+        Map<String, NetworkDevice> existingDevices = deviceRepository.findAll().stream()
+                .collect(Collectors.toMap(NetworkDevice::getMacAddress, Function.identity()));
+        for (NetworkDevice device: backup) {
+            NetworkDevice persistedDevice = existingDevices.getOrDefault(device.getMacAddress(), new NetworkDevice());
+            persistedDevice.setMacAddress(device.getMacAddress());
+            persistedDevice.setHostname(device.getHostname());
+            persistedDevice.setApproved(true);
+            deviceRepository.save(persistedDevice);
+        }
     }
 
     @Transactional

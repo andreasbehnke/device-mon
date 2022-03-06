@@ -1,5 +1,7 @@
 package org.network.devicemon.boundary;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.model.ApproveDevice;
 import org.network.devicemon.model.NetworkDeviceBackupItem;
@@ -8,12 +10,16 @@ import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.service.DeviceService;
 import org.network.devicemon.service.LeaseService;
 import org.network.devicemon.service.MacVendorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,16 +28,21 @@ import java.util.stream.Collectors;
 @Validated
 public class DeviceBoundary {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DeviceBoundary.class);
+
     private final LeaseService leaseService;
 
     private final DeviceService deviceService;
 
     private final MacVendorService macVendorService;
 
-    public DeviceBoundary(LeaseService leaseService, DeviceService deviceService, MacVendorService macVendorService) {
+    private final ObjectMapper objectMapper;
+
+    public DeviceBoundary(LeaseService leaseService, DeviceService deviceService, MacVendorService macVendorService, ObjectMapper objectMapper) {
         this.leaseService = leaseService;
         this.deviceService = deviceService;
         this.macVendorService = macVendorService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -45,6 +56,12 @@ public class DeviceBoundary {
     public List<NetworkDeviceBackupItem> getDevicesBackup(HttpServletResponse response) {
         response.setHeader("Content-Disposition","attachment; filename=\"hostnames_backup.json\"");
         return deviceService.findAllOrderByHostname().stream().map(NetworkDeviceBackupItem::new).collect(Collectors.toList());
+    }
+
+    @PostMapping("/restore")
+    public void restoreDevicesBackup(@RequestParam MultipartFile file) throws IOException {
+        List<NetworkDevice> backup = objectMapper.readValue(file.getInputStream(), new TypeReference<List<NetworkDevice>>(){});
+        deviceService.restore(backup);
     }
 
     @PutMapping("/sign-on")

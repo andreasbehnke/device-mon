@@ -1,5 +1,6 @@
-import React from "react";
+import React, {ChangeEvent} from "react";
 import DownloadIcon from '@mui/icons-material/Download';
+import UploadIcon from '@mui/icons-material/Upload';
 import {NetworkDeviceListItem} from "./model/NetworkDeviceListItem";
 import {useAsync} from "react-async-hook";
 import {DeviceList} from "./DeviceList";
@@ -14,7 +15,7 @@ export function DeviceListPage() {
         return result.data;
     }
 
-    const { result, loading, error } = useAsync<Array<NetworkDeviceListItem>>(loadDevices, []);
+    const { result, loading, error, execute } = useAsync<Array<NetworkDeviceListItem>>(loadDevices, []);
 
     let deviceList;
 
@@ -28,6 +29,18 @@ export function DeviceListPage() {
 
     const { enqueueSnackbar } = useSnackbar();
 
+    async function onFileChanged(event: ChangeEvent<HTMLInputElement>) {
+        if (event.target.files && event.target.files.length > 0) {
+            try {
+                await DeviceService.restoreBackup(event.target.files[0]);
+                await execute();
+                enqueueSnackbar("Restored configuration backup", {variant: "success"});
+            } catch (e) {
+                enqueueSnackbar("Could not restore configuration backup", {variant: "error"});
+            }
+        }
+    }
+
     async function onDownloadBackup() {
         try {
             DeviceService.downloadBackup();
@@ -40,8 +53,20 @@ export function DeviceListPage() {
     return (
         <Box sx={{m: 3}}>
             <Grid container sx={{marginBottom: 2}}>
-                <Grid item xs={11}><Typography variant={"h5"} gutterBottom>Network Devices</Typography></Grid>
-                <Grid item xs={1} container alignItems={"flex-end"} direction="column">
+                <Grid item xs={8}><Typography variant={"h5"} gutterBottom>Network Devices</Typography></Grid>
+                <Grid item xs={4} container justifyContent={"flex-end"}>
+                    <input
+                        id="upload-file"
+                        type="file"
+                        accept={".json"}
+                        hidden
+                        onChange={onFileChanged}
+                    />
+                    <label htmlFor="upload-file">
+                        <IconButton component={"span"} aria-label="Restore configuration from backup" title={"Restore configuration from backup"} >
+                            <UploadIcon />
+                        </IconButton>
+                    </label>
                     <IconButton aria-label="Download configuration backup" title={"Download configuration backup"} onClick={onDownloadBackup} ><DownloadIcon /></IconButton>
                 </Grid>
             </Grid>
