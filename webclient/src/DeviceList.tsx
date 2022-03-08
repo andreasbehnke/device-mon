@@ -4,7 +4,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
+    DialogContentText, IconButton,
     Paper,
     Table,
     TableCell,
@@ -17,6 +17,7 @@ import {KnownDeviceRow} from "./KnownDeviceRow";
 import {NewDeviceRow} from "./NewDeviceRow";
 import {DeviceService} from "./service/DeviceService";
 import {useSnackbar} from "notistack";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 
 interface DeviceListProps {
     deviceList: Array<NetworkDeviceListItem>;
@@ -72,6 +73,15 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
         setForgetMacAddress(macAddress);
     }
 
+    async function onListRefresh() {
+        try {
+            const {data: list} = await DeviceService.getDeviceList();
+            setDeviceList(list);
+        } catch (e) {
+            enqueueSnackbar("Could not refresh device list", {variant: "error"});
+        }
+    }
+
     return (
         <>
             <TableContainer component={Paper}>
@@ -85,7 +95,7 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
                             <TableCell sx={{display: ["none", "none", "none", "table-cell"]}}>DHCP Server</TableCell>
                             <TableCell sx={{display: ["none", "table-cell"]}}>Last seen</TableCell>
                             <TableCell>Host name</TableCell>
-                            <TableCell/>
+                            <TableCell  align={"right"}><IconButton aria-label="Refresh list" title={"Refresh list"} onClick={onListRefresh}><AutorenewIcon /></IconButton></TableCell>
                         </TableRow>
                     </TableHead>
                     {
