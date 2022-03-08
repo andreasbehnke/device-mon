@@ -12,7 +12,7 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {KnownDeviceRow} from "./KnownDeviceRow";
 import {NewDeviceRow} from "./NewDeviceRow";
 import {DeviceService} from "./service/DeviceService";
@@ -81,6 +81,15 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
             enqueueSnackbar("Could not refresh device list", {variant: "error"});
         }
     }
+
+    useEffect(() => {
+        const timer = setTimeout(async() => {
+            await onListRefresh();
+        }, 10000);
+        return () => {
+            clearTimeout(timer);
+        }
+    })
 
     return (
         <>
