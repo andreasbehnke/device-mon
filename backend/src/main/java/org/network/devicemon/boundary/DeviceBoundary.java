@@ -50,14 +50,6 @@ public class DeviceBoundary {
     public List<NetworkDeviceListItem> getAllDevices() {
         return deviceService.findAll().stream()
                 .map(networkDevice -> new NetworkDeviceListItem(networkDevice, macVendorService.getVendorInformation(networkDevice.getMacAddress())))
-                .sorted((o1, o2) -> {
-                    ZonedDateTime lastSeen1 = o1.getLastSeen();
-                    ZonedDateTime lastSeen2 = o2.getLastSeen();
-                    if (lastSeen1 == null && lastSeen2 == null) return 0;
-                    if (lastSeen1 == null) return 1;
-                    if (lastSeen2 == null) return -1;
-                    return lastSeen2.compareTo(lastSeen1);
-                })
                 .collect(Collectors.toList());
     }
 

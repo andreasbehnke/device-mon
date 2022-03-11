@@ -24,6 +24,15 @@ public class LeaseService {
         this.leaseRepository = leaseRepository;
     }
 
+    private void endLeases(ZonedDateTime now, String macAddress) {
+        List<NetworkDeviceLease> openLeases = leaseRepository.findAllByMacAddressAndLeaseEndIsNull(macAddress);
+        for (NetworkDeviceLease openLease: openLeases) {
+            openLease.setLeaseEnd(now);
+            openLease.setLastSeen(now);
+        }
+        leaseRepository.saveAll(openLeases);
+    }
+
     @Transactional
     public String startLease(SignOnInformation signOnInformation) {
         NetworkDevice device = deviceService.find(signOnInformation.getMacAddress());
@@ -33,15 +42,12 @@ public class LeaseService {
 
         ZonedDateTime now = ZonedDateTime.now();
         // Check if there are open-ended leases for this device. Stop these, because one device can only have one lease at any one time.
-        List<NetworkDeviceLease> openLeases = leaseRepository.findAllByMacAddressAndLeaseEndIsNull(device.getMacAddress());
-        for (NetworkDeviceLease openLease: openLeases) {
-            openLease.setLeaseEnd(now);
-            leaseRepository.save(openLease);
-        }
+        endLeases(now, device.getMacAddress());
         NetworkDeviceLease startedLease = new NetworkDeviceLease();
         startedLease.setMacAddress(device.getMacAddress());
         startedLease.setHostname(device.getHostname());
         startedLease.setLeaseStart(now);
+        startedLease.setLastSeen(now);
         startedLease.setDhcpServerName(signOnInformation.getDhcpServerName());
         startedLease.setInet4Address(signOnInformation.getInet4Address());
         deviceService.updateActualLease(device, leaseRepository.save(startedLease));
@@ -50,12 +56,7 @@ public class LeaseService {
 
     @Transactional
     public void endLease(String macAddress) {
-        ZonedDateTime now = ZonedDateTime.now();
         // Check if there are open-ended leases for this device. Stop these, because one device can only have one lease at any one time.
-        List<NetworkDeviceLease> openLeases = leaseRepository.findAllByMacAddressAndLeaseEndIsNull(macAddress);
-        for (NetworkDeviceLease openLease: openLeases) {
-            openLease.setLeaseEnd(now);
-            leaseRepository.save(openLease);
-        }
+        endLeases(ZonedDateTime.now(), macAddress);
     }
 }

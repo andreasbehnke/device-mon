@@ -32,12 +32,8 @@ public class NetworkDeviceListItem {
         if (networkDeviceLease != null) {
             inet4Address = networkDeviceLease.getInet4Address();
             dhcpServerName = networkDeviceLease.getDhcpServerName();
-            lastSeen = networkDeviceLease.getLeaseEnd();
-            activeLease = false;
-            if (lastSeen == null) {
-                lastSeen = networkDeviceLease.getLeaseStart();
-                activeLease = true;
-            }
+            lastSeen = networkDeviceLease.getLastSeen();
+            activeLease = networkDeviceLease.getLeaseEnd() == null;
         }
     }
 

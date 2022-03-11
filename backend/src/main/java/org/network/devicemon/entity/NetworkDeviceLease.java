@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(indexes = {
         @Index(name = "idx_leaseStart", columnList = "leaseStart"),
+        @Index(name = "idx_lastSeen", columnList = "lastSeen"),
         @Index(name = "idx_leaseEnd", columnList = "leaseEnd"),
         @Index(name = "idx_dhcpServerName", columnList = "dhcpServerName"),
         @Index(name = "idx_inet4Address", columnList = "inet4Address")
@@ -28,6 +29,9 @@ public class NetworkDeviceLease extends EntityBase {
 
     @NotNull
     private ZonedDateTime leaseStart;
+
+    @NotNull
+    private ZonedDateTime lastSeen;
 
     private ZonedDateTime leaseEnd;
 
@@ -60,6 +64,14 @@ public class NetworkDeviceLease extends EntityBase {
 
     public void setLeaseStart(ZonedDateTime leaseStart) {
         this.leaseStart = leaseStart;
+    }
+
+    public ZonedDateTime getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(ZonedDateTime lastSeen) {
+        this.lastSeen = lastSeen;
     }
 
     public ZonedDateTime getLeaseEnd() {
