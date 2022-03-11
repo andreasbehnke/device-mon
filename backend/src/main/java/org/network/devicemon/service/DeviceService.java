@@ -26,7 +26,7 @@ public class DeviceService {
     }
 
     public List<NetworkDevice> findAll() {
-        return deviceRepository.findAllByOrderByApprovedAscActualLeaseLastSeenDesc();
+        return deviceRepository.findAllByOrderByApprovedAscActualLeaseLeaseEndDescActualLeaseLastSeenDesc();
     }
 
     public List<NetworkDevice> findAllOrderByHostname() {

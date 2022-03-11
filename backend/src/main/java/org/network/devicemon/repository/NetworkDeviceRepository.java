@@ -11,7 +11,7 @@ public interface NetworkDeviceRepository extends JpaRepository<NetworkDevice, UU
 
     NetworkDevice findByMacAddress(String macAddress);
 
-    List<NetworkDevice> findAllByOrderByApprovedAscActualLeaseLastSeenDesc();
+    List<NetworkDevice> findAllByOrderByApprovedAscActualLeaseLeaseEndDescActualLeaseLastSeenDesc();
 
     List<NetworkDevice> findAllByOrderByHostname();
 
