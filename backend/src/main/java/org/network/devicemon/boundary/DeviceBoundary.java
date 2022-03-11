@@ -10,6 +10,7 @@ import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.service.DeviceService;
 import org.network.devicemon.service.LeaseService;
 import org.network.devicemon.service.MacVendorService;
+import org.network.devicemon.validation.MacAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +71,7 @@ public class DeviceBoundary {
     }
 
     @PutMapping("/sign-off/{macAddress}")
-    public void signOff(@NotEmpty @PathVariable(name = "macAddress") String macAddress) {
+    public void signOff(@NotEmpty @MacAddress @PathVariable(name = "macAddress") String macAddress) {
         leaseService.endLease(macAddress);
     }
 
@@ -82,7 +82,7 @@ public class DeviceBoundary {
     }
 
     @DeleteMapping("/{macAddress}")
-    public void forgetDevice(@NotEmpty @PathVariable(name = "macAddress") String macAddress) {
+    public void forgetDevice(@NotEmpty @MacAddress @PathVariable(name = "macAddress") String macAddress) {
         deviceService.delete(macAddress);
     }
 
