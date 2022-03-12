@@ -11,10 +11,10 @@
 :local result;
 
 # Configure device service
-:set deviceServiceUrl "http://[CONFIGURE SERVICE IP]:8080";
+:set deviceServiceUrl "http://[YOUR SERVICE IP]/api";
 
 # Configure your domain
-:set topdomain "[CONFIGURE YOUR LOCAL TLD]";
+:set topdomain "behnke.net";
 
 :if ($"lease-hostname" = "") do={
   :for i from=0 to=([:len $"leaseActMAC"] - 1) do={ 
@@ -78,4 +78,5 @@
     :log error ("device monitor not reachable");
   }
 }
+
 

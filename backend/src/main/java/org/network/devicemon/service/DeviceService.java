@@ -5,6 +5,7 @@ import org.network.devicemon.entity.NetworkDeviceLease;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.repository.NetworkDeviceRepository;
 import org.springframework.stereotype.Service;
+import sun.nio.ch.Net;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -25,12 +26,20 @@ public class DeviceService {
         this.deviceRepository = deviceRepository;
     }
 
-    public List<NetworkDevice> findAll() {
+    public List<NetworkDevice> findAllOrderByActivity() {
         return deviceRepository.findAllByOrderByApprovedAscActualLeaseLeaseEndDescActualLeaseLastSeenDesc();
     }
 
     public List<NetworkDevice> findAllOrderByHostname() {
         return deviceRepository.findAllByOrderByHostname();
+    }
+
+    public List<NetworkDevice> findAllOnlineDevicesNotInList(List<String> excludedMacAddresses) {
+        return deviceRepository.findAllByActualLeaseLeaseEndIsNullAndMacAddressNotIn(excludedMacAddresses);
+    }
+
+    public List<NetworkDevice> findAllInList(List<String> macAddresses) {
+        return deviceRepository.findAllByMacAddressIn(macAddresses);
     }
 
     public NetworkDevice find(String macAddress) {

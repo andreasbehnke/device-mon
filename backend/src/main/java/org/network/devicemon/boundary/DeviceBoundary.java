@@ -3,10 +3,7 @@ package org.network.devicemon.boundary;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.network.devicemon.entity.NetworkDevice;
-import org.network.devicemon.model.ApproveDevice;
-import org.network.devicemon.model.NetworkDeviceBackupItem;
-import org.network.devicemon.model.NetworkDeviceListItem;
-import org.network.devicemon.model.SignOnInformation;
+import org.network.devicemon.model.*;
 import org.network.devicemon.service.DeviceService;
 import org.network.devicemon.service.LeaseService;
 import org.network.devicemon.service.MacVendorService;
@@ -48,7 +45,7 @@ public class DeviceBoundary {
 
     @GetMapping
     public List<NetworkDeviceListItem> getAllDevices() {
-        return deviceService.findAll().stream()
+        return deviceService.findAllOrderByActivity().stream()
                 .map(networkDevice -> new NetworkDeviceListItem(networkDevice, macVendorService.getVendorInformation(networkDevice.getMacAddress())))
                 .collect(Collectors.toList());
     }
@@ -73,6 +70,11 @@ public class DeviceBoundary {
     @PutMapping("/sign-off/{macAddress}")
     public void signOff(@NotEmpty @MacAddress @PathVariable(name = "macAddress") String macAddress) {
         leaseService.endLease(macAddress);
+    }
+
+    @PutMapping("/synchronize-leases")
+    public void synchronizeLeases(@NotEmpty @RequestBody List<@Valid DhcpLease> leases) {
+        leaseService.synchronizeLeases(leases);
     }
 
     @PutMapping("/{macAddress}/approve")
