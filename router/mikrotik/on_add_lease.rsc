@@ -14,7 +14,7 @@
 :set deviceServiceUrl "http://[YOUR SERVICE IP]/api";
 
 # Configure your domain
-:set topdomain "behnke.net";
+:set topdomain "[YOUR OWN TOP LEVEL DOMAIN]";
 
 :if ($"lease-hostname" = "") do={
   :for i from=0 to=([:len $"leaseActMAC"] - 1) do={ 
