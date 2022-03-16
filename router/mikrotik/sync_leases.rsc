@@ -12,7 +12,7 @@
 :set firstLease (true);
 
 /ip dhcp-server lease
-:foreach lease in=[print as-value] do={
+:foreach lease in=[print as-value where status=bound] do={
    :if ($firstLease = false) do={ :set payload ( $payload .  ",")};
    :set firstLease (false);
    :set payload ( $payload .  "{\"macAddress\":\"" . $lease->"mac-address" . "\",\"clientHostname\":\"" . $lease->"host-name" . "\",\"dhcpServerName\":\"" . $lease->"server" . "\",\"inet4Address\":\"" . $lease->"address" . "\",\"lastSeenAsString\":\"" . $lease->"last-seen" . "\"}" );
