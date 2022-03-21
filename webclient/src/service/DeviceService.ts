@@ -10,7 +10,7 @@ export class DeviceService {
     }
 
     static getDeviceListStats(deviceList: Array<NetworkDeviceListItem>) : NetworkDeviceListStats {
-        const activeHosts = deviceList.filter(item => item.activeLease !== null).length;
+        const activeHosts = deviceList.filter(item => item.activeLease).length;
         const inactiveHosts = deviceList.length - activeHosts;
         return { activeHosts, inactiveHosts };
     }
