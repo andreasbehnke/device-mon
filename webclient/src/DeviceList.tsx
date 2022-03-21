@@ -10,7 +10,7 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow, Typography
 } from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {KnownDeviceRow} from "./KnownDeviceRow";
@@ -91,8 +91,11 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
         }
     })
 
+    const stats = DeviceService.getDeviceListStats(deviceList);
+
     return (
         <>
+            <Typography variant={"caption"}>Active devices: {stats.activeHosts}, inactive devices: {stats.inactiveHosts}</Typography>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>

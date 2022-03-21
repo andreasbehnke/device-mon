@@ -1,11 +1,18 @@
 import axios, {AxiosResponse} from "axios";
 import {NetworkDeviceListItem} from "../model/NetworkDeviceListItem";
 import moment from "moment";
+import {NetworkDeviceListStats} from "../model/NetworkDeviceListStats";
 
 export class DeviceService {
 
     static getDeviceList() : Promise<AxiosResponse<Array<NetworkDeviceListItem>>> {
         return axios.get<Array<NetworkDeviceListItem>>("/api/device");
+    }
+
+    static getDeviceListStats(deviceList: Array<NetworkDeviceListItem>) : NetworkDeviceListStats {
+        const activeHosts = deviceList.filter(item => item.activeLease !== null).length;
+        const inactiveHosts = deviceList.length - activeHosts;
+        return { activeHosts, inactiveHosts };
     }
 
     static downloadBackup() : void {
