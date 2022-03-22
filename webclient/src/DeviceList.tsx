@@ -95,7 +95,7 @@ export function DeviceList({deviceList : initialDeviceList} : DeviceListProps) {
 
     return (
         <>
-            <Typography variant={"caption"}>Active devices: {stats.activeHosts}, inactive devices: {stats.inactiveHosts}</Typography>
+            <Typography variant={"caption"}>{deviceList.length} devices, {stats.activeHosts} active, {stats.inactiveHosts} inactive</Typography>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
