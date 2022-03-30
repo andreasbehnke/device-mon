@@ -71,4 +71,7 @@ You can now work with the device list and give your devices meaning ful names an
 * npm install
 * npm start
 * see section "Install Router Scripts" for preparing your router to send lease information to your development setup. 
-  
+
+# References
+
+* DHCP lease script: https://wiki.mikrotik.com/wiki/Setting_static_DNS_record_for_each_DHCP_lease
