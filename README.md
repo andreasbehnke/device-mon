@@ -75,3 +75,4 @@ You can now work with the device list and give your devices meaning ful names an
 # References
 
 * DHCP lease script: https://wiki.mikrotik.com/wiki/Setting_static_DNS_record_for_each_DHCP_lease
+* Inspired by: https://forum.mikrotik.com/viewtopic.php?t=119469
