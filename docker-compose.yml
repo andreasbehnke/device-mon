@@ -28,7 +28,7 @@ services:
     image: ghcr.io/andreasbehnke/devicemon_webclient:latest
     depends_on: [backend]
     ports:
-      - 80:80
+      - "80:80"
     networks:
       - devicemon
 
