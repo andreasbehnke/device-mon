@@ -1,0 +1,3 @@
+DATABASE_PASSWORD = your secret password
+DATABASE_PORT = db port, default is 5432 (optional)
+DATABASE_USER = db user, default is postgres (optional)
