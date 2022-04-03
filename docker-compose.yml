@@ -29,6 +29,7 @@ services:
     depends_on: [backend]
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - devicemon
 
