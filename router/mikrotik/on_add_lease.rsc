@@ -37,7 +37,7 @@
   :set payload ("{\"dhcpServerName\":\"".$leaseServerName."\",\"macAddress\":\"".$leaseActMAC."\",\"inet4Address\":\"".$leaseActIP."\",\"clientHostname\":\"".$"lease-hostname"."\"}");
   :set currentUrl ($deviceServiceUrl."/device/sign-on");
   :do {
-   :set result ([/tool fetch http-method=put http-header-field="Content-Type: application/json" url=$currentUrl http-data=$payload as-value output=user]);
+   :set result ([/tool fetch http-method=put check-certificate=no http-header-field="Content-Type: application/json" url=$currentUrl http-data=$payload as-value output=user]);
    :log info ("received host name from device monitoring:". $result->"data");
    :set FullHostName ($result->"data" . "." . $topdomain);
   } on-error={
@@ -72,7 +72,7 @@
   # notify device monitor about sign-off
   :do {
     :set currentUrl ($deviceServiceUrl."/device/sign-off/".$leaseActMAC);
-    /tool fetch http-method=put url=$currentUrl output=user;
+    /tool fetch http-method=put check-certificate=no url=$currentUrl output=user;
     :log info ("send sign-off to device monitor");
   } on-error={
     :log error ("device monitor not reachable");

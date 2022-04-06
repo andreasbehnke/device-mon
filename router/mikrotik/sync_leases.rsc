@@ -19,7 +19,7 @@
 }
 :set payload ($payload . "]");
 :do {
-   /tool fetch http-method=put http-header-field="Content-Type: application/json" url=$deviceServiceUrl http-data=$payload;
+   /tool fetch http-method=put check-certificate=no http-header-field="Content-Type: application/json" url=$deviceServiceUrl http-data=$payload;
    :log info ("synchronized leases with device monitor");
 } on-error={
    :log error ("device monitor not reachable");
