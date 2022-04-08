@@ -51,7 +51,7 @@ public class LeaseService {
         startedLease.setLastSeen(lastSeen);
         startedLease.setDhcpServerName(signOnInformation.getDhcpServerName());
         startedLease.setInet4Address(signOnInformation.getInet4Address());
-        deviceService.updateActualLease(device, leaseRepository.save(startedLease));
+        device = deviceService.updateActualLease(device, leaseRepository.save(startedLease));
         return device.getHostname();
     }
 
