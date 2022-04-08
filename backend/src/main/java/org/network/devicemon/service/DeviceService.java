@@ -5,7 +5,6 @@ import org.network.devicemon.entity.NetworkDeviceLease;
 import org.network.devicemon.model.SignOnInformation;
 import org.network.devicemon.repository.NetworkDeviceRepository;
 import org.springframework.stereotype.Service;
-import sun.nio.ch.Net;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
