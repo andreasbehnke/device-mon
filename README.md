@@ -72,6 +72,10 @@ You can now work with the device list and give your devices meaning ful names an
 * npm start
 * see section "Install Router Scripts" for preparing your router to send lease information to your development setup. 
 
+## Update MAC Vendor Database
+* Download CSV from https://maclookup.app/downloads/csv-database
+* move file to /backend/src/main/resources/org/network/devicemon/service/mac-vendors-export.csv
+
 # References
 
 * DHCP lease script: https://wiki.mikrotik.com/wiki/Setting_static_DNS_record_for_each_DHCP_lease

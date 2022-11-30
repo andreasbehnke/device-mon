@@ -1,9 +1,8 @@
 package org.network.devicemon.entity;
 
-import com.sun.istack.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.network.devicemon.validation.MacAddress;
-
-import javax.persistence.*;
 
 @Entity
 @Table(indexes = {

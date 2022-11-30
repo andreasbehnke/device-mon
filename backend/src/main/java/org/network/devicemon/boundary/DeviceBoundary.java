@@ -2,21 +2,19 @@ package org.network.devicemon.boundary;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.model.*;
 import org.network.devicemon.service.DeviceService;
 import org.network.devicemon.service.LeaseService;
 import org.network.devicemon.service.MacVendorService;
 import org.network.devicemon.validation.MacAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +23,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/device")
 @Validated
 public class DeviceBoundary {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DeviceBoundary.class);
 
     private final LeaseService leaseService;
 
@@ -58,7 +54,7 @@ public class DeviceBoundary {
 
     @PostMapping("/restore")
     public void restoreDevicesBackup(@RequestParam MultipartFile file) throws IOException {
-        List<NetworkDevice> backup = objectMapper.readValue(file.getInputStream(), new TypeReference<List<NetworkDevice>>(){});
+        List<NetworkDevice> backup = objectMapper.readValue(file.getInputStream(), new TypeReference<>(){});
         deviceService.restore(backup);
     }
 

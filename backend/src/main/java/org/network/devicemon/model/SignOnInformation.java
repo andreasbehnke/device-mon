@@ -1,10 +1,9 @@
 package org.network.devicemon.model;
 
-import com.sun.istack.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.network.devicemon.validation.Inet4Address;
 import org.network.devicemon.validation.MacAddress;
-
-import javax.validation.constraints.NotBlank;
 
 public class SignOnInformation {
 

@@ -1,5 +1,6 @@
 package org.network.devicemon.service;
 
+import jakarta.transaction.Transactional;
 import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.entity.NetworkDeviceLease;
 import org.network.devicemon.model.DhcpLease;
@@ -8,7 +9,6 @@ import org.network.devicemon.repository.NetworkDeviceLeaseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
