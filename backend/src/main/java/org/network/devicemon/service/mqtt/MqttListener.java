@@ -11,6 +11,8 @@ import org.network.devicemon.entity.NetworkDevice;
 import org.network.devicemon.model.NetworkDeviceListItem;
 import org.network.devicemon.service.LeaseListener;
 import org.network.devicemon.service.MacVendorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,8 @@ import java.util.stream.Stream;
 @Component
 @ConditionalOnProperty(prefix = "devicemon.mqtt", name = "broker.address")
 public class MqttListener implements LeaseListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MqttListener.class);
 
     private final String prefix;
 
@@ -43,6 +47,7 @@ public class MqttListener implements LeaseListener {
             @Value("${devicemon.mqtt.broker.password}") String brokerPassword,
             ObjectMapper objectMapper,
             MacVendorService macVendorService) throws MqttException {
+        LOG.info("Starting MQTT publishing with client id \"{}\", prefix \"{}\" and user \"{}\" to broker \"{}\"", clientId, prefix, brokerUser, brokerAddress);
         client = new MqttClient(brokerAddress, clientId, new MemoryPersistence());
         options = new MqttConnectOptions();
         options.setUserName(brokerUser);
