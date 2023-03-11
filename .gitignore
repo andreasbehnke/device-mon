@@ -35,3 +35,6 @@ build/
 
 ### Docker & Docker Compose ###
 .env
+
+### private configuration files ###
+/backend/src/main/resources/application-local.properties

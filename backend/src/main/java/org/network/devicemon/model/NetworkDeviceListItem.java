@@ -9,9 +9,9 @@ public class NetworkDeviceListItem {
 
     private boolean activeLease;
 
-    private String macAddress;
+    private final String macAddress;
 
-    private String vendor;
+    private final String vendor;
 
     private String inet4Address;
 
@@ -19,9 +19,9 @@ public class NetworkDeviceListItem {
 
     private ZonedDateTime lastSeen;
 
-    private String hostname;
+    private final String hostname;
 
-    private boolean approved;
+    private final boolean approved;
 
     public NetworkDeviceListItem(NetworkDevice networkDevice, String vendor) {
         macAddress = networkDevice.getMacAddress();
@@ -67,5 +67,9 @@ public class NetworkDeviceListItem {
 
     public boolean isApproved() {
         return approved;
+    }
+
+    public String getUniqueName() {
+        return hostname + "-" + macAddress;
     }
 }

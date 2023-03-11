@@ -23,9 +23,12 @@ public class LeaseService {
 
     private final NetworkDeviceLeaseRepository leaseRepository;
 
-    public LeaseService(DeviceService deviceService, NetworkDeviceLeaseRepository leaseRepository) {
+    private final List<LeaseListener> leaseListeners;
+
+    public LeaseService(DeviceService deviceService, NetworkDeviceLeaseRepository leaseRepository, List<LeaseListener> leaseListeners) {
         this.deviceService = deviceService;
         this.leaseRepository = leaseRepository;
+        this.leaseListeners = leaseListeners;
     }
 
     private void endLeases(ZonedDateTime now, String macAddress) {
@@ -37,7 +40,7 @@ public class LeaseService {
         leaseRepository.saveAll(openLeases);
     }
 
-    private String startLease(SignOnInformation signOnInformation, NetworkDevice device, ZonedDateTime lastSeen) {
+    private NetworkDevice startLease(SignOnInformation signOnInformation, NetworkDevice device, ZonedDateTime lastSeen) {
         if (device == null) {
             device = deviceService.create(signOnInformation);
         }
@@ -51,20 +54,26 @@ public class LeaseService {
         startedLease.setLastSeen(lastSeen);
         startedLease.setDhcpServerName(signOnInformation.getDhcpServerName());
         startedLease.setInet4Address(signOnInformation.getInet4Address());
-        device = deviceService.updateActualLease(device, leaseRepository.save(startedLease));
-        return device.getHostname();
+        startedLease = leaseRepository.save(startedLease);
+        return deviceService.updateActualLease(device, startedLease);
     }
 
     @Transactional
     public String startLease(SignOnInformation signOnInformation) {
         NetworkDevice device = deviceService.find(signOnInformation.getMacAddress());
-        return startLease(signOnInformation, device, ZonedDateTime.now());
+        final NetworkDevice startedDevice = startLease(signOnInformation, device, ZonedDateTime.now());
+        leaseListeners.forEach(leaseListener -> leaseListener.onLeaseStart(startedDevice));
+        return startedDevice.getHostname();
     }
 
     @Transactional
     public void endLease(String macAddress) {
         // Check if there are open-ended leases for this device. Stop these, because one device can only have one lease at any one time.
         endLeases(ZonedDateTime.now(), macAddress);
+        if (!leaseListeners.isEmpty()) {
+            NetworkDevice device = deviceService.find(macAddress);
+            leaseListeners.forEach(leaseListener -> leaseListener.onLeaseEnd(device));
+        }
     }
 
     @Transactional
@@ -75,10 +84,14 @@ public class LeaseService {
 
         // Find all devices marked as online in database but which are not contained in active leases list.
         // These database entries are outdated, end their leases.
-        deviceService.findAllOnlineDevicesNotInList(activeMacAddresses)
-                .forEach(networkDevice -> endLeases(now, networkDevice.getMacAddress()));
+        List<NetworkDevice> offlineDevices = deviceService.findAllOnlineDevicesNotInList(activeMacAddresses);
+        offlineDevices.forEach(networkDevice -> {
+                    String macAddr = networkDevice.getMacAddress();
+                    endLeases(now, macAddr);
+                });
 
-        Map<String, NetworkDevice> activeDeviceMap = deviceService.findAllInList(activeMacAddresses).stream()
+        List<NetworkDevice> onlineDevices = deviceService.findAllInList(activeMacAddresses);
+        Map<String, NetworkDevice> activeDeviceMap = onlineDevices.stream()
                 .collect(Collectors.toMap(NetworkDevice::getMacAddress, Function.identity()));
 
         for (DhcpLease lease: leases) {
@@ -101,5 +114,6 @@ public class LeaseService {
                 leaseRepository.save(networkDeviceLease);
             }
         }
+        leaseListeners.forEach(leaseListener -> leaseListener.onLeasesSynchronize(offlineDevices, onlineDevices));
     }
 }
