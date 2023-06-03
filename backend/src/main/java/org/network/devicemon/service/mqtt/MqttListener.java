@@ -58,7 +58,7 @@ public class MqttListener implements LeaseListener {
         this.macVendorService = macVendorService;
     }
 
-    private void publish(DevicesMessage message) {
+    private void publish(Object message) {
         try {
             if (!client.isConnected()) {
                 client.connect(options);
@@ -90,12 +90,17 @@ public class MqttListener implements LeaseListener {
 
     @Override
     public void onLeasesSynchronize(List<NetworkDevice> inactiveDevices, List<NetworkDevice> activeDevices) {
-        Map<String, NetworkDeviceListItem> devices = Stream.concat(inactiveDevices.stream(), activeDevices.stream())
+        List<NetworkDeviceListItem> devices = Stream.concat(inactiveDevices.stream(), activeDevices.stream())
                 .map(networkDevice -> {
-                            String macAddress = networkDevice.getMacAddress();
-                            return new NetworkDeviceListItem(networkDevice, macVendorService.getVendorInformation(macAddress));
-                        })
+                    String macAddress = networkDevice.getMacAddress();
+                    return new NetworkDeviceListItem(networkDevice, macVendorService.getVendorInformation(macAddress));
+                })
+                .collect(Collectors.toList());
+        Map<String, NetworkDeviceListItem> devicesMap = devices.stream()
                 .collect(Collectors.toMap(NetworkDeviceListItem::getUniqueName, Function.identity()));
-        publish(new DevicesMessage(devices));
+        publish(new DevicesMessage(devicesMap));
+        publish(new StatusMessage(devices.stream()
+                .collect(
+                        Collectors.groupingBy(NetworkDeviceListItem::getDhcpServerName, Collectors.summingLong(value -> value.isActiveLease() ? 1L : 0L )))));
     }
 }
