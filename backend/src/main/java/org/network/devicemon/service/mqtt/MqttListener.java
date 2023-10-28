@@ -32,7 +32,11 @@ public class MqttListener implements LeaseListener {
 
     private final String prefix;
 
-    private final MqttClient client;
+    private final String brokerAddress;
+
+    private final String clientId;
+
+    private MqttClient client;
 
     private final MqttConnectOptions options;
 
@@ -46,26 +50,35 @@ public class MqttListener implements LeaseListener {
             @Value("${devicemon.mqtt.broker.user}") String brokerUser,
             @Value("${devicemon.mqtt.broker.password}") String brokerPassword,
             ObjectMapper objectMapper,
-            MacVendorService macVendorService) throws MqttException {
-        LOG.info("Starting MQTT publishing with client id \"{}\", prefix \"{}\" and user \"{}\" to broker \"{}\"", clientId, prefix, brokerUser, brokerAddress);
-        client = new MqttClient(brokerAddress, clientId, new MemoryPersistence());
-        options = new MqttConnectOptions();
-        options.setUserName(brokerUser);
-        options.setPassword(brokerPassword.toCharArray());
-        client.connect(options);
+            MacVendorService macVendorService) {
+        this.options = new MqttConnectOptions();
+        this.options.setUserName(brokerUser);
+        this.options.setPassword(brokerPassword.toCharArray());
         this.prefix = prefix;
+        this.brokerAddress = brokerAddress;
+        this.clientId = clientId;
         this.objectMapper = objectMapper;
         this.macVendorService = macVendorService;
+        LOG.info("Starting MQTT publishing with client id \"{}\", prefix \"{}\" and user \"{}\" to broker \"{}\"", clientId, prefix, brokerUser, brokerAddress);
+        try {
+            client = new MqttClient(this.brokerAddress, this.clientId, new MemoryPersistence());
+            client.connect(options);
+        } catch (MqttException e) {
+            LOG.error("Could not start MQTT publishing", e);
+        }
     }
 
     private void publish(Object message) {
         try {
+            if (client == null) {
+                client = new MqttClient(this.brokerAddress, this.clientId, new MemoryPersistence());
+            }
             if (!client.isConnected()) {
                 client.connect(options);
             }
             client.publish(prefix, new MqttMessage(objectMapper.writeValueAsBytes(message)));
         } catch (JsonProcessingException | MqttException e) {
-            throw new RuntimeException(e);
+            LOG.error("Could not publish MQTT message", e);
         }
     }
 
@@ -95,7 +108,7 @@ public class MqttListener implements LeaseListener {
                     String macAddress = networkDevice.getMacAddress();
                     return new NetworkDeviceListItem(networkDevice, macVendorService.getVendorInformation(macAddress));
                 })
-                .collect(Collectors.toList());
+                .toList();
         Map<String, NetworkDeviceListItem> devicesMap = devices.stream()
                 .collect(Collectors.toMap(NetworkDeviceListItem::getUniqueName, Function.identity()));
         publish(new DevicesMessage(devicesMap));
