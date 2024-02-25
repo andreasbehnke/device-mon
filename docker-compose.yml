@@ -22,6 +22,11 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-changeme}
       DATABASE_HOST: "devicemon_postgres"
       DATABASE_PORT: ${DATABASE_PORT:-5432}
+      MQTT_USER: ${MQTT_USER:-mqtt}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-changeme}
+      MQTT_PROTOCOL: ${MQTT_PROTOCOL:-tcp}
+      MQTT_HOST: ${MQTT_HOST}
+      MQTT_PORT: ${MQTT_PROTOCOL:-1883}
     networks:
       - devicemon
   webclient:

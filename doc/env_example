@@ -1,3 +1,8 @@
-DATABASE_PASSWORD = your secret password
+DATABASE_PASSWORD = your secret database password
 DATABASE_PORT = db port, default is 5432 (optional)
 DATABASE_USER = db user, default is postgres (optional)
+MQTT_USER = mqtt login user, default is mqtt (optional)
+MQTT_PASSWORD = your secrete mqtt password
+MQTT_PROTOCOL = mqtt protocol version, default is tcp (optional)
+MQTT_HOST = mqtt broker host, default is localhost (optional)
+MQTT_PORT = mqtt broker port, default is 1883 (optional)
