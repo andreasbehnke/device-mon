@@ -3,7 +3,7 @@ version: '3.5'
 services:
   postgres:
     container_name: devicemon_dev_postgres
-    image: postgres:14-bullseye
+    image: postgres:16-bookworm
     environment:
       POSTGRES_USER: ${DATABASE_USER:-postgres}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-changeme}

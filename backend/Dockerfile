@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.3
 # **** build stage ****
-FROM openjdk:17-jdk-bullseye as build
+FROM amazoncorretto:21 as build
 WORKDIR /workspace/app
 COPY mvnw .
 COPY .mvn .mvn
@@ -12,9 +12,8 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw install
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 # **** runtime stage ****
-FROM openjdk:17-jdk-bullseye
+FROM amazoncorretto:21
 VOLUME /tmp
-RUN apt-get update && apt-get upgrade -y
 ARG DEPENDENCY=/workspace/app/target/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
