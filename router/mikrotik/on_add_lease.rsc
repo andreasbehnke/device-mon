@@ -1,6 +1,7 @@
 # DNS record for DHCP lease
 
 :local topdomain;
+:local LeaseHostName;
 :local FullHostName;
 :local HostNameFromMAC;
 :local NoUpdate false;
@@ -16,7 +17,38 @@
 # Configure your domain
 :set topdomain "[YOUR OWN TOP LEVEL DOMAIN]";
 
-:if ($"lease-hostname" = "") do={
+# Source: https://gist.github.com/SmartFinn/acc7953eaeb43cece034?permalink_comment_id=3561435#file-dhcp-leases-to-dns-rsc
+# Normalize hostname (e.g. "-= My Phone =-" -> "My-Phone")
+# - truncate length to 63 chars
+# - substitute disallowed chars with a hyphen
+# param: name
+:local normalizeHostname do={
+  :local result;
+  :local isInvalidChar true;
+  :for i from=0 to=([:len $name]-1) do={
+    :local char [:pick $name $i];
+    :if ($i < 63) do={
+      :if ($char~"[a-zA-Z0-9]") do={
+        :set result ($result . $char);
+        :set isInvalidChar false;
+      } else={
+        :if (!$isInvalidChar) do={
+          :set result ($result . "-");
+          :set isInvalidChar true;
+        };
+      };
+    };
+  };
+  # delete trailing hyphen
+  :if ($isInvalidChar) do={
+    :set result [:pick $result 0 ([:len $result]-1)];
+  }
+  :return $result;
+};
+:set LeaseHostName [$normalizeHostname name=$"lease-hostname"];
+:log info ("normalized hostname:". $LeaseHostName);
+
+:if ($LeaseHostName = "") do={
   :for i from=0 to=([:len $"leaseActMAC"] - 1) do={ 
     :local char [:pick $"leaseActMAC" $i];
     :if ($char = ":") do={
@@ -27,14 +59,14 @@
   }
   :set FullHostName ($HostNameFromMAC . "." . $topdomain);
 } else= {
-  :set FullHostName ($"lease-hostname" . "." . $topdomain);
+  :set FullHostName ($LeaseHostName . "." . $topdomain);
 }
 
 /ip dns static;
 
 :if ($leaseBound = 1) do={
   # notify device monitor about sign-on and try to retrieve hostname
-  :set payload ("{\"dhcpServerName\":\"".$leaseServerName."\",\"macAddress\":\"".$leaseActMAC."\",\"inet4Address\":\"".$leaseActIP."\",\"clientHostname\":\"".$"lease-hostname"."\"}");
+  :set payload ("{\"dhcpServerName\":\"".$leaseServerName."\",\"macAddress\":\"".$leaseActMAC."\",\"inet4Address\":\"".$leaseActIP."\",\"clientHostname\":\"".$LeaseHostName."\"}");
   :set currentUrl ($deviceServiceUrl."/device/sign-on");
   :do {
    :set result ([/tool fetch http-method=put check-certificate=no http-header-field="Content-Type: application/json" url=$currentUrl http-data=$payload as-value output=user]);
@@ -78,5 +110,3 @@
     :log error ("device monitor not reachable");
   }
 }
-
-
